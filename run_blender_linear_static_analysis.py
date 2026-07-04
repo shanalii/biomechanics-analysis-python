@@ -27,6 +27,8 @@ frame = FEModel3D()
 for i, v in enumerate(bm.verts):
     frame.add_node(f'N{i}', v.co[0], v.co[1], v.co[2])
 
+# Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
+# TODO: Approximate values for steel beams
 frame.add_material('A36', E=1, G=2, nu=0.3, rho=0.0004)
 frame.add_section('Wsect', A=5, Iy=6, Iz=7, J=8)
 
@@ -35,6 +37,7 @@ for i, e in enumerate(bm.edges):
     j_node = f'N{e.verts[1].index}'
     frame.add_member(f'M{i}', i_node=i_node, j_node=j_node, material_name='A36', section_name='Wsect')
 
+# TODO: use point/nodal supports
 frame.def_support('N1', support_DX=True, support_DY=True, support_DZ=True, support_RY=True, support_RZ=True)
 frame.add_node_load('N2', direction='FZ', P=-5.0, case='D')
 frame.add_load_combo('1.0D', {'D': 1.0})
