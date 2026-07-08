@@ -31,7 +31,7 @@ for i, v in enumerate(bm.verts):
 # Approximate values for steel beams, from SkyCiv
 # Additional info (including G)
 # Name, Young's modulus, shear modulus of elasticity (ksi), Poisson's ratio, density
-frame.add_material('A36', E=29000, G=, nu=0.27, rho=7850)
+frame.add_material('A36', E=200000, G=29000, nu=0.27, rho=7850)
 #frame.add_section('Wsect', A=5, Iy=6, Iz=7, J=8)
 
 # Add 3D model members for every edge in the mesh
