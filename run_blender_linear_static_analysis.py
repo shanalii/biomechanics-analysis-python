@@ -29,8 +29,9 @@ for i, v in enumerate(bm.verts):
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
 # Approximate values for steel beams, from SkyCiv
-# Name, Young's modulus, G, Poisson's ratio, density
-frame.add_material('A36', E=200000, G=2, nu=0.27, rho=7850)
+# Additional info (including G)
+# Name, Young's modulus, shear modulus of elasticity (ksi), Poisson's ratio, density
+frame.add_material('A36', E=29000, G=, nu=0.27, rho=7850)
 #frame.add_section('Wsect', A=5, Iy=6, Iz=7, J=8)
 
 # Add 3D model members for every edge in the mesh
