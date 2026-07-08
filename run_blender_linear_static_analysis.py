@@ -28,9 +28,10 @@ for i, v in enumerate(bm.verts):
     frame.add_node(f'N{i}', v.co[0], v.co[1], v.co[2])
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
-# TODO: Approximate values for steel beams
-frame.add_material('A36', E=1, G=2, nu=0.3, rho=0.0004)
-frame.add_section('Wsect', A=5, Iy=6, Iz=7, J=8)
+# Approximate values for steel beams, from SkyCiv
+# Name, Young's modulus, G, Poisson's ratio, density
+frame.add_material('A36', E=200000, G=2, nu=0.27, rho=7850)
+#frame.add_section('Wsect', A=5, Iy=6, Iz=7, J=8)
 
 # Add 3D model members for every edge in the mesh
 for i, e in enumerate(bm.edges):
