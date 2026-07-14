@@ -32,15 +32,18 @@ for i, v in enumerate(bm.verts):
 # Additional info (including G)
 # Name, Young's modulus, shear modulus of elasticity (ksi), Poisson's ratio, density
 frame.add_material('A36', E=200000, G=29000, nu=0.27, rho=7850)
-#frame.add_section('Wsect', A=5, Iy=6, Iz=7, J=8)
 
-# Add 3D model members for every edge in the mesh
+# Single section for everything, test values for now
+# TODO: do we need real values?
+frame.add_section('Wsect', A=1, Iy=1, Iz=1, J=1)
+
+# Add 3D model members for every edge in the mesh, nodes for every vertex
 for i, e in enumerate(bm.edges):
     i_node = f'N{e.verts[0].index}'
     j_node = f'N{e.verts[1].index}'
     frame.add_member(f'M{i}', i_node=i_node, j_node=j_node, material_name='A36', section_name='Wsect')
 
-# Supports from translation/rotation from every axis
+# Supports (for nodes) from translation/rotation from every axis
 frame.def_support('N1', support_DX=True, support_DY=True, support_DZ=True, support_RX=True, support_RY=True, support_RZ=True)
 
 # TODO: add point loads
