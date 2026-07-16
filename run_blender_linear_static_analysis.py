@@ -34,7 +34,7 @@ model.add_section('S', A=1, Iy=1, Iz=1, J=1)
 # Approximate values for steel beams, from SkyCiv
 # Additional info (including G)
 # Name, Young's modulus, shear modulus of elasticity (ksi), Poisson's ratio, density
-model.add_material('A36', E=200000, G=29000, nu=0.27, rho=7850)
+model.add_material('Steel', E=200000, G=29000, nu=0.27, rho=7850)
 
 # Add nodes to model, prefixed by N
 for v in bm.verts:
@@ -45,16 +45,13 @@ for e in bm.edges:
     # Obtain the unique indices of the 2 vertices connected to each edge
     i = e.verts[0].index
     j = e.verts[1].index
-    model.add_member(f'M{e.index}', f'N{i}', f'N{j}', 'M', 'S')
-
-for i, v in enumerate(bm.verts):
-    model.add_node(f'N{i}', v.co[0], v.co[1], v.co[2])
+    model.add_member(f'M{e.index}', f'N{i}', f'N{j}', 'Steel', 'S')
 
 # Free mesh from memory
 bm.free()
 
-print(f'Nodes: {len(frame.nodes)}')
-print(f'Members: {len(frame.members)}')
+print(f'Nodes: {len(model.nodes)}')
+print(f'Members: {len(model.members)}')
 
 # # Supports (for nodes) from translation/rotation from every axis
 # model.def_support('N1', support_DX=True, support_DY=True, support_DZ=True, support_RX=True, support_RY=True, support_RZ=True)
