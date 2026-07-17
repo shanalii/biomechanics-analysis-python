@@ -13,7 +13,10 @@ import bmesh
 
 ### SETUP ###
 
-# Load input csv file with figure coordinate data
+# Load input csv file with figure 
+# TODO: we need to assert some sort of order of the nodes/members to set the individual loads on them
+# Input csv format will be: index/name of limb/member, mass (or % distribution)
+# Additional input: total mass
 
 # Get the active mesh in Blender window
 me = bpy.context.object.data
