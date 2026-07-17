@@ -11,14 +11,19 @@ from Pynite import FEModel3D
 import bpy
 import bmesh
 
+### SETUP ###
+
 # Load input csv file with figure coordinate data
 
-# Get the active mesh
+# Get the active mesh in Blender window
 me = bpy.context.object.data
 
 # Create a BMesh representation
 bm = bmesh.new()   # create an empty BMesh
 bm.from_mesh(me)   # fill it in from a Mesh
+
+
+### CONSTRUCT PYNITE 3D MODEL ###
 
 # Create an FE Model
 model = FEModel3D()
@@ -64,19 +69,22 @@ for name, member in model.members.items():
     print(f'{name}: {i}->{j}')
 
 # Supports (for nodes) from translation/rotation from every axis
-# TODO: determine supports, set all supports to true for now
+# TODO: determine supports, set all to true for now
 model.def_support('N1', support_DX=True, support_DY=True, support_DZ=True, support_RX=True, support_RY=True, support_RZ=True)
 
 # Add loads - only gravity for now
 model.add_member_self_weight('FZ', -9.81, case='Gravity')
 model.add_load_combo('Combo', {'Gravity': 1.0})
 
-# print('Performing linear analysis')
+
+### RUN LINEAR ANALYSIS VIA PYNITE ###
+
+print('Performing linear analysis')
 model.analyze_linear(log=True, check_stability=False)
 
 # Results
 # Nodal displacements
-print('Nodal displacements:')
+print('Nodal displacements (meters):')
 for name, node in model.nodes.items():
     dx = node.DX['Combo']
     dy = node.DY['Combo']
@@ -84,7 +92,7 @@ for name, node in model.nodes.items():
     print(f'{name}: DX={dx:.2f}  DY={dy:.2f}  DZ={dz:.2f}')
 
 # Reactions at supported nodes
-print('Reaction forces:')
+print('Reaction forces (Newtons):')
 for name, node in model.nodes.items():
     rx = node.RxnFX['Combo']
     ry = node.RxnFY['Combo']
