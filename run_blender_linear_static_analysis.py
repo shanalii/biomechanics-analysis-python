@@ -35,48 +35,48 @@ bm.from_mesh(me)   # fill it in from a Mesh
 # [name, is_supported]
 input_nodes = [
     ['l_shoulder', False],
-    ['l_elbow',    False],
-    ['l_wrist',    True],
-    ['l_finger',   False],
+    ['l_elbow', False],
+    ['l_wrist', True],
+    ['l_finger', False],
     ['r_shoulder', False],
-    ['r_elbow',    True],
-    ['r_wrist',    False],
-    ['r_finger',   False],
-    ['neck_base',  False],
-    ['head_base',  False],
-    ['head_top',   False],
+    ['r_elbow', True],
+    ['r_wrist', False],
+    ['r_finger', False],
+    ['neck_base', False],
+    ['head_base', False],
+    ['head_top', False],
     ['spine_base', False],
-    ['r_hip',      False],
-    ['l_hip',      False],
-    ['l_knee',     True],
-    ['l_heel',     False],
-    ['l_toe',      False],
-    ['r_knee',     True],
-    ['r_heel',     False],
-    ['r_toe',      False],
+    ['r_hip', False],
+    ['l_hip', False],
+    ['l_knee', True],
+    ['l_heel', False],
+    ['l_toe', False],
+    ['r_knee', True],
+    ['r_heel', False],
+    ['r_toe', False],
 ]
 
-# [name, cm_percent]
+# [name, mass_percent, cm_percent]
 input_members = [
-    ['l_upperarm', 57.72],
-    ['l_forearm',  45.74],
-    ['l_back',     0],
-    ['r_upperarm', 57.72],
-    ['r_forearm',  45.74],
-    ['r_hand',     79.00],
-    ['r_back',     0],
-    ['neck',       0],
-    ['head',       59.76],
-    ['spine',      44.86],
-    ['r_pelvis',   0],
-    ['l_pelvis',   0],
-    ['l_thigh',    40.95],
-    ['l_calf',     44.59],
-    ['l_foot',     44.15],
-    ['r_thigh',    40.95],
-    ['r_calf',     44.59],
-    ['r_foot',     44.15],
-    ['l_hand',     79.00],
+    ['l_upperarm', 2.71, 57.72],
+    ['l_forearm', 1.62, 45.74],
+    ['l_back', 0, 0],
+    ['r_upperarm', 2.71, 57.72],
+    ['r_forearm', 1.62, 45.74],
+    ['r_hand', 0.61, 79.00],
+    ['r_back', 0, 0],
+    ['neck', 0, 0],
+    ['head', 6.94, 59.76],
+    ['spine', 43.46, 44.86],
+    ['r_pelvis', 0, 0],
+    ['l_pelvis', 0, 0],
+    ['l_thigh', 14.16, 40.95],
+    ['l_calf', 4.33, 44.59],
+    ['l_foot', 1.37, 44.15],
+    ['r_thigh', 14.16, 40.95],
+    ['r_calf', 4.33, 44.59],
+    ['r_foot', 1.37, 44.15],
+    ['l_hand', 0.61, 79.00],
 ]
 
 
@@ -104,14 +104,42 @@ model.add_material('Steel', E=200000, G=29000, nu=0.27, rho=7850)
 
 # Add nodes to model with anatomical names
 for v in bm.verts:
-    model.add_node(input_nodes[v.index][0], v.co.x, v.co.y, v.co.z)
+
+    # Get respective input node
+    input_node = input_nodes[v.index]
+    node_name = input_node[0]
+    is_supported = input_node[1]
+
+    model.add_node(input_node[0], v.co.x, v.co.y, v.co.z)
+
+    # Add support if needed
+    if is_supported:
+        model.def_support(node_name, support_DX=True, support_DY=True, support_DZ=True, support_RX=True, support_RY=True, support_RZ=True)
 
 # Add members to model with anatomical names
 for e in bm.edges:
+
+    # Get respective input member
+    input_member = input_members[e.index]
+    member_name = input_member[0]
+    m_distribution = input_member[1]
+    cm_percent = input_member[2]
+
     # Obtain the unique indices of the 2 vertices connected to each edge
     i = e.verts[0].index
     j = e.verts[1].index
-    model.add_member(input_members[e.index][0], input_nodes[i][0], input_nodes[j][0], 'Steel', 'S')
+    model.add_member(member_name, input_nodes[i][0], input_nodes[j][0], 'Steel', 'S')
+
+    # Add point load at CM based on CM percent; calculate length along the member
+    if m_distribution > 0:
+        limb_weight = body_weight * m_distribution / 100
+
+        # TODO: double check for direction of the CM position
+        cm_length = model.members[member_name].L() * cm_percent
+        model.add_member_pt_load(member_name, 'FZ', -1 * limb_weight, cm_length, case='Point')
+
+# Consolidate point loads into a load combo, to be referenced in analysis results
+model.add_load_combo('Combo', {'Point': 1.0})
 
 # Free mesh from memory
 bm.free()
@@ -127,20 +155,13 @@ print(f'Members: {len(model.members)}')
 for name, member in model.members.items():
     i = member.i_node.name
     j = member.j_node.name
-    print(f'{name}: {i}->{j}')
+    print(f'{name}: {i} -> {j}')
 
-# Supports (for nodes) from translation/rotation from every axis
-# Set supports based on node dict
-for data in input_nodes:
-    if data[1]:
-        model.def_support(data[0], support_DX=True, support_DY=True, support_DZ=True, support_RX=True, support_RY=True, support_RZ=True)
-
-# TODO: add loads for each member based on weight and longitudinal CM
-# Point loads at the center of mass point, amount = weight of segment
-# Geometry/Accessors - model.members['M'].L(): returns member length - model.members['M'].i_node, .j_node: node objects
-# model.add_member_pt_load('M1', 'FZ', -1030, 0.15, case='Point') # 4th arg is proximal value, in length units
-model.add_member_pt_load('head', 'FZ', -1030, 0.15, case='Point')
-model.add_load_combo('Combo', {'Point': 1.0})
+print('\nMember point loads:')
+for name, member in model.members.items():
+    for load in member.PtLoads:
+        direction, magnitude, x, case = load
+        print(f'  {name}: {direction} = {magnitude} at x={x} (case: {case})')
 
 
 ### RUN LINEAR ANALYSIS VIA PYNITE ###
