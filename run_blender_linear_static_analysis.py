@@ -135,7 +135,7 @@ for e in bm.edges:
         limb_weight = body_weight * m_distribution / 100
 
         # TODO: double check for direction of the CM position
-        cm_length = model.members[member_name].L() * cm_percent
+        cm_length = model.members[member_name].L() * cm_percent / 100
         model.add_member_pt_load(member_name, 'FZ', -1 * limb_weight, cm_length, case='Point')
 
 # Consolidate point loads into a load combo, to be referenced in analysis results
