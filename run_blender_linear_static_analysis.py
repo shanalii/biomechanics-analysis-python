@@ -11,7 +11,6 @@ from Pynite import FEModel3D
 import bpy
 import bmesh
 
-# TODO: add const for mass % distribution, longitudinal CM position %
 # TODO: double check units (kips???)
 
 ### SETUP ###
