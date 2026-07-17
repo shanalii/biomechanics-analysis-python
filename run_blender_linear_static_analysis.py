@@ -33,6 +33,11 @@ model = FEModel3D()
 
 # Single section for everything, test values for now
 # TODO: do we need real values? - probably do for A, the cross-sectional area
+# A: cross-sectional area (pi*r^2)
+# Iy: second moment of area (inertia) about the weak axis (pi*r^4/4)
+# Iz: second moment of area (inertia) about the strong axis (pi*r^4/4)
+# J: torsion constant (pi*r^4/2)
+# (Source: https://skyciv.com/free-moment-of-inertia-calculator/, http://www.hyperphysics.phy-astr.gsu.edu/hbase/icyl.html)
 model.add_section('S', A=0.5, Iy=1, Iz=1, J=1)
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
@@ -73,6 +78,7 @@ for name, member in model.members.items():
 model.def_support('N1', support_DX=True, support_DY=True, support_DZ=True, support_RX=True, support_RY=True, support_RZ=True)
 
 # Add loads - only gravity for now
+# https://pynite.readthedocs.io/en/latest/load_combo.html
 model.add_member_self_weight('FZ', -9.81, case='Gravity')
 model.add_load_combo('Combo', {'Gravity': 1.0})
 
