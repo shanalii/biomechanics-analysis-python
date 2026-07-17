@@ -161,7 +161,13 @@ print('\nMember point loads:')
 for name, member in model.members.items():
     for load in member.PtLoads:
         direction, magnitude, x, case = load
-        print(f'  {name}: {direction} = {magnitude} at x={x} (case: {case})')
+        print(f'{name}: {direction} = {magnitude.2f}')
+
+print('Supports:')
+for name, node in frame.nodes.items():
+    if any([node.support_DX, node.support_DY, node.support_DZ,
+            node.support_RX, node.support_RY, node.support_RZ]):
+        print(f'{name}: DX={node.support_DX} DY={node.support_DY} DZ={node.support_DZ} RX={node.support_RX} RY={node.support_RY} RZ={node.support_RZ}')
 
 
 ### RUN LINEAR ANALYSIS VIA PYNITE ###
