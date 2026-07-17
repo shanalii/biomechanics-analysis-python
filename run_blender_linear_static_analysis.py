@@ -11,6 +11,7 @@ from Pynite import FEModel3D
 import bpy
 import bmesh
 
+
 ### SETUP ###
 
 # Load input csv file with figure 
@@ -84,6 +85,8 @@ model.def_support('N1', support_DX=True, support_DY=True, support_DZ=True, suppo
 # https://pynite.readthedocs.io/en/latest/load_combo.html
 model.add_member_self_weight('FZ', -9.81, case='Gravity')
 model.add_load_combo('Combo', {'Gravity': 1.0})
+
+# TODO: add loads to each limb depending on mass distrubution?
 
 
 ### RUN LINEAR ANALYSIS VIA PYNITE ###
