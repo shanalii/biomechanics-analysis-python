@@ -89,7 +89,7 @@ print('Performing linear analysis')
 model.analyze_linear(log=True, check_stability=False)
 
 # Results
-# Nodal displacements
+# Nodal displacements - how much each node has moved due to load
 print('Nodal displacements (meters):')
 for name, node in model.nodes.items():
     dx = node.DX['Combo']
@@ -97,7 +97,7 @@ for name, node in model.nodes.items():
     dz = node.DZ['Combo']
     print(f'{name}: DX={dx:.2f}  DY={dy:.2f}  DZ={dz:.2f}')
 
-# Reactions at supported nodes
+# Reactions at supported nodes - forces that supports are exerting to stabilize structure
 print('Reaction forces (Newtons):')
 for name, node in model.nodes.items():
     rx = node.RxnFX['Combo']
