@@ -13,6 +13,9 @@ import bmesh
 import logging
 import os
 
+
+### LOGGING SETUP ###
+
 # Log to output.txt in the current directory
 # Need to go up 1 level since current directory is the Blender file we're running code in
 script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
