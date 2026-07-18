@@ -1,105 +1,95 @@
-3D model constructed.
+00:08:36 INFO: 3D model constructed.
+00:08:36 INFO: 
 Nodes: 20
-l_shoulder: (0.00, 0.00, 0.00)
-l_elbow: (-0.01, -0.11, -0.19)
-l_wrist: (-0.01, -0.01, -0.42)
-l_finger: (-0.03, 0.19, -0.42)
-r_shoulder: (0.36, 0.05, -0.03)
-r_elbow: (0.45, 0.07, -0.23)
-r_wrist: (0.22, 0.19, -0.27)
-r_finger: (0.10, 0.31, -0.36)
-neck_base: (0.18, 0.03, -0.02)
-head_base: (0.17, 0.12, -0.01)
-head_top: (0.15, 0.38, 0.02)
-spine_base: (0.28, -0.53, -0.14)
-r_hip: (0.38, -0.51, -0.15)
-l_hip: (0.17, -0.54, -0.13)
-l_knee: (0.21, -0.65, -0.45)
-l_heel: (0.37, -0.84, -0.24)
-l_toe: (0.43, -1.01, -0.39)
-r_knee: (0.62, -0.54, -0.38)
-r_heel: (0.55, -0.88, -0.36)
-r_toe: (0.57, -1.11, -0.40)
+00:08:36 INFO: l_shoulder: (0.00, 0.00, 0.00)
+00:08:36 INFO: l_elbow: (-0.01, -0.11, -0.19)
+00:08:36 INFO: l_wrist: (-0.01, -0.01, -0.42)
+00:08:36 INFO: l_finger: (-0.03, 0.19, -0.42)
+00:08:36 INFO: r_shoulder: (0.36, 0.05, -0.03)
+00:08:36 INFO: r_elbow: (0.45, 0.07, -0.23)
+00:08:36 INFO: r_wrist: (0.22, 0.19, -0.27)
+00:08:36 INFO: r_finger: (0.10, 0.31, -0.36)
+00:08:36 INFO: neck_base: (0.18, 0.03, -0.02)
+00:08:36 INFO: head_base: (0.17, 0.12, -0.01)
+00:08:36 INFO: head_top: (0.15, 0.38, 0.02)
+00:08:36 INFO: spine_base: (0.28, -0.53, -0.14)
+00:08:36 INFO: r_hip: (0.38, -0.51, -0.15)
+00:08:36 INFO: l_hip: (0.17, -0.54, -0.13)
+00:08:36 INFO: l_knee: (0.21, -0.65, -0.45)
+00:08:36 INFO: l_heel: (0.37, -0.84, -0.24)
+00:08:36 INFO: l_toe: (0.43, -1.01, -0.39)
+00:08:36 INFO: r_knee: (0.62, -0.54, -0.38)
+00:08:36 INFO: r_heel: (0.55, -0.88, -0.36)
+00:08:36 INFO: r_toe: (0.57, -1.11, -0.40)
+00:08:36 INFO: 
 Members: 19
-l_upperarm: l_shoulder -> l_elbow
-l_forearm: l_elbow -> l_wrist
-l_back: neck_base -> l_shoulder
-r_upperarm: r_elbow -> r_shoulder
-r_forearm: r_wrist -> r_elbow
-r_hand: r_wrist -> r_finger
-r_back: r_shoulder -> neck_base
-neck: neck_base -> head_base
-head: head_base -> head_top
-spine: neck_base -> spine_base
-r_pelvis: r_hip -> spine_base
-l_pelvis: spine_base -> l_hip
-l_thigh: l_hip -> l_knee
-l_calf: l_knee -> l_heel
-l_foot: l_heel -> l_toe
-r_thigh: r_knee -> r_hip
-r_calf: r_heel -> r_knee
-r_foot: r_toe -> r_heel
-l_hand: l_wrist -> l_finger
-
+00:08:36 INFO: l_upperarm: l_shoulder -> l_elbow
+00:08:36 INFO: l_forearm: l_elbow -> l_wrist
+00:08:36 INFO: l_back: neck_base -> l_shoulder
+00:08:36 INFO: r_upperarm: r_elbow -> r_shoulder
+00:08:36 INFO: r_forearm: r_wrist -> r_elbow
+00:08:36 INFO: r_hand: r_wrist -> r_finger
+00:08:36 INFO: r_back: r_shoulder -> neck_base
+00:08:36 INFO: neck: neck_base -> head_base
+00:08:36 INFO: head: head_base -> head_top
+00:08:36 INFO: spine: neck_base -> spine_base
+00:08:36 INFO: r_pelvis: r_hip -> spine_base
+00:08:36 INFO: l_pelvis: spine_base -> l_hip
+00:08:36 INFO: l_thigh: l_hip -> l_knee
+00:08:36 INFO: l_calf: l_knee -> l_heel
+00:08:36 INFO: l_foot: l_heel -> l_toe
+00:08:36 INFO: r_thigh: r_knee -> r_hip
+00:08:36 INFO: r_calf: r_heel -> r_knee
+00:08:36 INFO: r_foot: r_toe -> r_heel
+00:08:36 INFO: l_hand: l_wrist -> l_finger
+00:08:36 INFO: 
 Member point loads:
-l_upperarm: FZ = -2.71
-l_forearm: FZ = -1.62
-r_upperarm: FZ = -2.71
-r_forearm: FZ = -1.62
-r_hand: FZ = -0.61
-head: FZ = -6.94
-spine: FZ = -43.46
-l_thigh: FZ = -14.16
-l_calf: FZ = -4.33
-l_foot: FZ = -1.37
-r_thigh: FZ = -14.16
-r_calf: FZ = -4.33
-r_foot: FZ = -1.37
-l_hand: FZ = -0.61
+00:08:36 INFO: l_upperarm: FZ = -2.71
+00:08:36 INFO: l_forearm: FZ = -1.62
+00:08:36 INFO: r_upperarm: FZ = -2.71
+00:08:36 INFO: r_forearm: FZ = -1.62
+00:08:36 INFO: r_hand: FZ = -0.61
+00:08:36 INFO: head: FZ = -6.94
+00:08:36 INFO: spine: FZ = -43.46
+00:08:36 INFO: l_thigh: FZ = -14.16
+00:08:36 INFO: l_calf: FZ = -4.33
+00:08:36 INFO: l_foot: FZ = -1.37
+00:08:36 INFO: r_thigh: FZ = -14.16
+00:08:36 INFO: r_calf: FZ = -4.33
+00:08:36 INFO: r_foot: FZ = -1.37
+00:08:36 INFO: l_hand: FZ = -0.61
+00:08:36 INFO: 
 Supports:
-l_wrist: DX=True DY=True DZ=True RX=True RY=True RZ=True
-r_elbow: DX=True DY=True DZ=True RX=True RY=True RZ=True
-l_knee: DX=True DY=True DZ=True RX=True RY=True RZ=True
-r_knee: DX=True DY=True DZ=True RX=True RY=True RZ=True
+00:08:36 INFO: l_wrist
+00:08:36 INFO: r_elbow
+00:08:36 INFO: l_knee
+00:08:36 INFO: r_knee
+00:08:36 INFO: 
 Performing linear analysis
-+-------------------+
-| Analyzing: Linear |
-+-------------------+
-- Adding nodal spring support stiffness terms to global stiffness matrix
-- Adding spring stiffness terms to global stiffness matrix
-- Adding member stiffness terms to global stiffness matrix
-- Adding quadrilateral stiffness terms to global stiffness matrix
-- Adding plate stiffness terms to global stiffness matrix
-
-- Analyzing load combination Combo
-- Calculating global displacement vector
-- Calculating reactions
-
-- Analysis complete
-
-Nodal displacements (meters):
-l_shoulder: DX=-0.00  DY=-0.00  DZ=-0.00
-l_elbow: DX=0.00  DY=0.00  DZ=-0.00
-l_wrist: DX=0.00  DY=0.00  DZ=0.00
-l_finger: DX=-0.00  DY=0.00  DZ=-0.00
-r_shoulder: DX=0.00  DY=0.00  DZ=-0.00
-r_elbow: DX=0.00  DY=0.00  DZ=0.00
-r_wrist: DX=-0.01  DY=0.00  DZ=-0.00
-r_finger: DX=-0.01  DY=0.01  DZ=-0.00
-neck_base: DX=0.02  DY=0.00  DZ=-0.00
-head_base: DX=0.02  DY=0.00  DZ=-0.00
-head_top: DX=0.02  DY=-0.02  DZ=-0.01
-spine_base: DX=0.02  DY=0.00  DZ=-0.00
-r_hip: DX=0.00  DY=-0.00  DZ=-0.00
-l_hip: DX=0.00  DY=-0.00  DZ=-0.00
-l_knee: DX=0.00  DY=0.00  DZ=0.00
-l_heel: DX=-0.04  DY=0.05  DZ=-0.06
-l_toe: DX=-0.04  DY=0.04  DZ=-0.06
-r_knee: DX=0.00  DY=0.00  DZ=0.00
-r_heel: DX=0.00  DY=0.01  DZ=-0.00
-r_toe: DX=0.00  DY=0.00  DZ=-0.00
+00:08:36 INFO: Nodal displacements (meters):
+00:08:36 INFO: l_shoulder: DX=-0.00  DY=-0.00  DZ=-0.00
+00:08:36 INFO: l_elbow: DX=0.00  DY=0.00  DZ=-0.00
+00:08:36 INFO: l_wrist: DX=0.00  DY=0.00  DZ=0.00
+00:08:36 INFO: l_finger: DX=-0.00  DY=0.00  DZ=-0.00
+00:08:36 INFO: r_shoulder: DX=0.00  DY=0.00  DZ=-0.00
+00:08:36 INFO: r_elbow: DX=0.00  DY=0.00  DZ=0.00
+00:08:36 INFO: r_wrist: DX=-0.01  DY=0.00  DZ=-0.00
+00:08:36 INFO: r_finger: DX=-0.01  DY=0.01  DZ=-0.00
+00:08:36 INFO: neck_base: DX=0.02  DY=0.00  DZ=-0.00
+00:08:36 INFO: head_base: DX=0.02  DY=0.00  DZ=-0.00
+00:08:36 INFO: head_top: DX=0.02  DY=-0.02  DZ=-0.01
+00:08:36 INFO: spine_base: DX=0.02  DY=0.00  DZ=-0.00
+00:08:36 INFO: r_hip: DX=0.00  DY=-0.00  DZ=-0.00
+00:08:36 INFO: l_hip: DX=0.00  DY=-0.00  DZ=-0.00
+00:08:36 INFO: l_knee: DX=0.00  DY=0.00  DZ=0.00
+00:08:36 INFO: l_heel: DX=-0.04  DY=0.05  DZ=-0.06
+00:08:36 INFO: l_toe: DX=-0.04  DY=0.04  DZ=-0.06
+00:08:36 INFO: r_knee: DX=0.00  DY=0.00  DZ=0.00
+00:08:36 INFO: r_heel: DX=0.00  DY=0.01  DZ=-0.00
+00:08:36 INFO: r_toe: DX=0.00  DY=0.00  DZ=-0.00
+00:08:36 INFO: 
 Reaction forces (Newtons):
-l_wrist: RxnFX=-1.57  RxnFY=2.49  RxnFZ=2.44
-r_elbow: RxnFX=-1.87  RxnFY=4.66  RxnFZ=2.73
-l_knee: RxnFX=431.50  RxnFY=-2290.39  RxnFZ=834.66
-r_knee: RxnFX=-428.05  RxnFY=2283.24  RxnFZ=-739.82
+00:08:36 INFO: l_wrist: RxnFX=-1.57  RxnFY=2.49  RxnFZ=2.44
+00:08:36 INFO: r_elbow: RxnFX=-1.87  RxnFY=4.66  RxnFZ=2.73
+00:08:36 INFO: l_knee: RxnFX=431.50  RxnFY=-2290.39  RxnFZ=834.66
+00:08:36 INFO: r_knee: RxnFX=-428.05  RxnFY=2283.24  RxnFZ=-739.82

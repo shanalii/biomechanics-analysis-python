@@ -7,15 +7,41 @@
 import sys
 sys.path.insert(0, "/Users/sl/blender-env-3-13/lib/python3.13/site-packages")
 
-
-
 from Pynite import FEModel3D
 import bpy
 import bmesh
+import logging
+import os
+
+# Log to output.txt in the current directory
+# Need to go up 1 level since current directory is the Blender file we're running code in
+script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+log_path = os.path.join(script_dir, "output.txt")
+log_format = "%(asctime)s %(levelname)s: %(message)s"
+date_format = "%H:%M:%S"
+
+# Get root logger and clear existing handlers from previous runs
+logger = logging.getLogger()
+logger.handlers.clear()
+logger.setLevel(logging.DEBUG)
+
+# Log to file output.txt
+file_handler = logging.FileHandler(log_path, mode='w')
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(logging.Formatter(log_format, datefmt=date_format))
+
+# Also log to console
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+console_handler.setFormatter(logging.Formatter(log_format, datefmt=date_format))
+
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
+
+
+### MECHANICS SETUP ###
 
 # TODO: double check units (kips???)
-
-### SETUP ###
 
 # Input: total weight (kg)
 body_weight = 100
@@ -121,12 +147,12 @@ for v in bm.verts:
     # Add support if needed - fix the node in place from translation and rotation in all axes
     if is_supported:
         model.def_support(node_name, 
-            support_DX=True, 
-            support_DY=True, 
-            support_DZ=True, 
-            support_RX=True, 
-            support_RY=True, 
-            support_RZ=True
+            support_DX = True, 
+            support_DY = True, 
+            support_DZ = True, 
+            support_RX = True, 
+            support_RY = True, 
+            support_RZ = True
         )
 
 
@@ -158,52 +184,52 @@ model.add_load_combo('Combo', {'Point': 1.0})
 
 # Free mesh from memory
 bm.free()
-print('3D model constructed.')
+logger.info('3D model constructed.')
 
 # Print number of nodes and coordinates
-print(f'\nNodes: {len(model.nodes)}')
+logger.info(f'\nNodes: {len(model.nodes)}')
 for name, node in model.nodes.items():
-    print(f'{name}: ({node.X:.2f}, {node.Y:.2f}, {node.Z:.2f})')
+    logger.info(f'{name}: ({node.X:.2f}, {node.Y:.2f}, {node.Z:.2f})')
 
 # Print number of members and coordinates
-print(f'\nMembers: {len(model.members)}')
+logger.info(f'\nMembers: {len(model.members)}')
 for name, member in model.members.items():
     i = member.i_node.name
     j = member.j_node.name
-    print(f'{name}: {i} -> {j}')
+    logger.info(f'{name}: {i} -> {j}')
 
-print('\nMember point loads:')
+logger.info('\nMember point loads:')
 for name, member in model.members.items():
     for load in member.PtLoads:
         direction, magnitude, x, case = load
-        print(f'{name}: {direction} = {magnitude}')
+        logger.info(f'{name}: {direction} = {magnitude}')
 
-print('\nSupports:')
+logger.info('\nSupports:')
 for name, node in model.nodes.items():
     if any([node.support_DX, node.support_DY, node.support_DZ,
             node.support_RX, node.support_RY, node.support_RZ]):
-        print(name)
+        logger.info(name)
 
 
 ### RUN LINEAR ANALYSIS VIA PYNITE ###
 
-print('\nPerforming linear analysis')
+logger.info('\nPerforming linear analysis')
 model.analyze_linear(log=True, check_stability=True)
 
 # Results
 # Nodal displacements - how much each node has moved due to load
-print('Nodal displacements (meters):')
+logger.info('Nodal displacements (meters):')
 for name, node in model.nodes.items():
     dx = node.DX['Combo']
     dy = node.DY['Combo']
     dz = node.DZ['Combo']
-    print(f'{name}: DX={dx:.2f}  DY={dy:.2f}  DZ={dz:.2f}')
+    logger.info(f'{name}: DX={dx:.2f}  DY={dy:.2f}  DZ={dz:.2f}')
 
 # Reactions at supported nodes - forces that supports are exerting to stabilize structure
-print('\nReaction forces (Newtons):')
+logger.info('\nReaction forces (Newtons):')
 for name, node in model.nodes.items():
     rx = node.RxnFX['Combo']
     ry = node.RxnFY['Combo']
     rz = node.RxnFZ['Combo']
     if any(abs(v) > 1e-10 for v in (rx, ry, rz)):
-        print(f'{name}: RxnFX={rx:.2f}  RxnFY={ry:.2f}  RxnFZ={rz:.2f}')
+        logger.info(f'{name}: RxnFX={rx:.2f}  RxnFY={ry:.2f}  RxnFZ={rz:.2f}')
