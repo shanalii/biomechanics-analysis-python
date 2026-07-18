@@ -43,6 +43,7 @@ logger.addHandler(console_handler)
 
 
 ### MECHANICS SETUP ###
+# Model for: 2026.07.16_Basic Stick Figure Posed.blend
 
 # TODO: double check units (kips???)
 
@@ -125,7 +126,7 @@ model = FEModel3D()
 # Iz: second moment of area (inertia) about the strong axis (pi*r^4/4)
 # J: torsion constant (pi*r^4/2)
 # (Source: https://skyciv.com/free-moment-of-inertia-calculator/, http://www.hyperphysics.phy-astr.gsu.edu/hbase/icyl.html)
-model.add_section('S', A=0.00004, Iy=100000, Iz=100000, J=100000)
+model.add_section('S', A=0.001, Iy=1e10, Iz=1e10, J=1e10)
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
 # Approximate values for steel beams, from SkyCiv
@@ -226,7 +227,8 @@ for name, node in model.nodes.items():
     dx = node.DX['Combo']
     dy = node.DY['Combo']
     dz = node.DZ['Combo']
-    logger.info(f'{name}: DX={dx:.2f}  DY={dy:.2f}  DZ={dz:.2f}')
+    if any(abs(v) > 1e-3 for v in (dx, dy, dz)):
+        logger.info(f'{name}: DX={dx:.2f}  DY={dy:.2f}  DZ={dz:.2f}')
 
 # Reactions at supported nodes - forces that supports are exerting to stabilize structure
 logger.info('\nReaction forces (Newtons):')
@@ -234,5 +236,5 @@ for name, node in model.nodes.items():
     rx = node.RxnFX['Combo']
     ry = node.RxnFY['Combo']
     rz = node.RxnFZ['Combo']
-    if any(abs(v) > 1e-10 for v in (rx, ry, rz)):
+    if any(abs(v) > 1e-3 for v in (rx, ry, rz)):
         logger.info(f'{name}: RxnFX={rx:.2f}  RxnFY={ry:.2f}  RxnFZ={rz:.2f}')
