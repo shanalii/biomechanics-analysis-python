@@ -3,9 +3,11 @@
 # source blender-env-3-13/bin/activate
 # blender (opens app, select blender file)
 
-# use venv
+# Use venv
 import sys
 sys.path.insert(0, "/Users/sl/blender-env-3-13/lib/python3.13/site-packages")
+
+
 
 from Pynite import FEModel3D
 import bpy
@@ -31,7 +33,7 @@ me = bpy.context.object.data
 bm = bmesh.new()   # create an empty BMesh
 bm.from_mesh(me)   # fill it in from a Mesh
 
-# Order is specific to this model
+# Order is specific to this model - manually listed from Blender coordinates
 # [name, is_supported]
 input_nodes = [
     ['l_shoulder', False],
@@ -82,13 +84,13 @@ input_members = [
 
 ### CONSTRUCT PYNITE 3D MODEL ###
 
-# Create an FE Model
+# Create an FE Model (Pynite representation)
 model = FEModel3D()
 
 # ref: https://pynite.readthedocs.io/en/latest/FEModel3D.html#quick-start
 # Need to add: nodes, materials, sections, members, support, node loads, load combos
 
-# Section based on steel material characteristics - this shouldn't add extra weight to the model
+# Section based on steel material characteristics - TODO make sure this doesn't add extra weight to the model
 # A: cross-sectional area (pi*r^2)
 # Iy: second moment of area (inertia) about the weak axis (pi*r^4/4)
 # Iz: second moment of area (inertia) about the strong axis (pi*r^4/4)
@@ -98,28 +100,40 @@ model.add_section('S', A=0.00004, Iy=100000, Iz=100000, J=100000)
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
 # Approximate values for steel beams, from SkyCiv
-# Additional info (including G)
-# Name, Young's modulus, shear modulus of elasticity (ksi), Poisson's ratio, density
-model.add_material('Steel', E=200000, G=29000, nu=0.27, rho=7850)
+model.add_material('Steel', 
+    E=200000,  # Young's modulus
+    G=29000,  # Shear modulus of elasticity (ksi)
+    nu=0.27,  # Poisson's ratio
+    rho=7850,  # Density
+) 
+
 
 # Add nodes to model with anatomical names
 for v in bm.verts:
 
-    # Get respective input node
+    # Get respective input node data
     input_node = input_nodes[v.index]
     node_name = input_node[0]
     is_supported = input_node[1]
 
     model.add_node(input_node[0], v.co.x, v.co.y, v.co.z)
 
-    # Add support if needed
+    # Add support if needed - fix the node in place from translation and rotation in all axes
     if is_supported:
-        model.def_support(node_name, support_DX=True, support_DY=True, support_DZ=True, support_RX=True, support_RY=True, support_RZ=True)
+        model.def_support(node_name, 
+            support_DX=True, 
+            support_DY=True, 
+            support_DZ=True, 
+            support_RX=True, 
+            support_RY=True, 
+            support_RZ=True
+        )
+
 
 # Add members to model with anatomical names
 for e in bm.edges:
 
-    # Get respective input member
+    # Get respective input member and data
     input_member = input_members[e.index]
     member_name = input_member[0]
     m_distribution = input_member[1]
@@ -138,6 +152,7 @@ for e in bm.edges:
         cm_length = model.members[member_name].L() * cm_percent / 100
         model.add_member_pt_load(member_name, 'FZ', -1 * limb_weight, cm_length, case='Point')
 
+
 # Consolidate point loads into a load combo, to be referenced in analysis results
 model.add_load_combo('Combo', {'Point': 1.0})
 
@@ -146,12 +161,12 @@ bm.free()
 print('3D model constructed.')
 
 # Print number of nodes and coordinates
-print(f'Nodes: {len(model.nodes)}')
+print(f'\nNodes: {len(model.nodes)}')
 for name, node in model.nodes.items():
     print(f'{name}: ({node.X:.2f}, {node.Y:.2f}, {node.Z:.2f})')
 
 # Print number of members and coordinates
-print(f'Members: {len(model.members)}')
+print(f'\nMembers: {len(model.members)}')
 for name, member in model.members.items():
     i = member.i_node.name
     j = member.j_node.name
@@ -161,19 +176,19 @@ print('\nMember point loads:')
 for name, member in model.members.items():
     for load in member.PtLoads:
         direction, magnitude, x, case = load
-        print(f'{name}: {direction} = {magnitude.2f}')
+        print(f'{name}: {direction} = {magnitude}')
 
-print('Supports:')
-for name, node in frame.nodes.items():
+print('\nSupports:')
+for name, node in model.nodes.items():
     if any([node.support_DX, node.support_DY, node.support_DZ,
             node.support_RX, node.support_RY, node.support_RZ]):
-        print(f'{name}: DX={node.support_DX} DY={node.support_DY} DZ={node.support_DZ} RX={node.support_RX} RY={node.support_RY} RZ={node.support_RZ}')
+        print(name)
 
 
 ### RUN LINEAR ANALYSIS VIA PYNITE ###
 
-print('Performing linear analysis')
-model.analyze_linear(log=True, check_stability=False)
+print('\nPerforming linear analysis')
+model.analyze_linear(log=True, check_stability=True)
 
 # Results
 # Nodal displacements - how much each node has moved due to load
@@ -185,7 +200,7 @@ for name, node in model.nodes.items():
     print(f'{name}: DX={dx:.2f}  DY={dy:.2f}  DZ={dz:.2f}')
 
 # Reactions at supported nodes - forces that supports are exerting to stabilize structure
-print('Reaction forces (Newtons):')
+print('\nReaction forces (Newtons):')
 for name, node in model.nodes.items():
     rx = node.RxnFX['Combo']
     ry = node.RxnFY['Combo']
