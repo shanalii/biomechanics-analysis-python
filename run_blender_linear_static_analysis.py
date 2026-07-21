@@ -53,7 +53,7 @@ body_weight = 100
 # TODO2: global ordering of nodes/members to set loads; for now, hard-code based on order created
     # Coordinate-based (eg. by height or left/right) has many edge cases based on figure position
     # Construct graph data structure, identify limbs based on leaves/nodes with 1 member
-    # Spine has 2 members on each end
+    # Head is limb (leaf node in graph) as well - we can identify arms vs legs based on coordinates down the spine from head
     # Symmetry across spine: doesn't really matter R/L, but we can assume R/L arms/legs are on either side
 
 # Get the active mesh in Blender window
