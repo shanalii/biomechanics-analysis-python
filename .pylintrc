@@ -1,0 +1,5 @@
+[TYPECHECK]
+ignored-modules=bpy,bmesh,Pynite
+
+[MESSAGES CONTROL]
+disable=fixme
