@@ -23,8 +23,8 @@ sys.path.insert(0, "/Users/sl/blender-env-3-13/lib/python3.13/site-packages")
 # running code in
 script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 log_path = os.path.join(script_dir, "output.txt")
-log_format = "%(asctime)s %(levelname)s: %(message)s"
-date_format = "%H:%M:%S"
+LOG_FORMAT = "%(asctime)s %(levelname)s: %(message)s"
+DATE_FORMAT = "%H:%M:%S"
 
 # Get root logger and clear existing handlers from previous runs
 logger = logging.getLogger()
@@ -34,15 +34,15 @@ logger.setLevel(logging.DEBUG)
 # Log to file output.txt
 file_handler = logging.FileHandler(log_path, mode="w")
 file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(logging.Formatter(log_format, datefmt=date_format))
+file_handler.setFormatter(logging.Formatter(LOG_FORMAT, datefmt=DATE_FORMAT))
 
 # Also log to console
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)
 console_handler.setFormatter(
     logging.Formatter(
-        log_format,
-        datefmt=date_format))
+        LOG_FORMAT,
+        datefmt=DATE_FORMAT))
 
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
@@ -54,12 +54,13 @@ logger.addHandler(console_handler)
 # TODO: double check units (kips???)
 
 # Input: total weight (kg)
-body_weight = 100
+BODY_WEIGHT = 100
 
 # TODO2: global ordering of nodes/members to set loads; for now, hard-code based on order created
 # Coordinate-based (eg. by height or left/right) has many edge cases based on figure position
 # Construct graph data structure, identify limbs based on leaves/nodes with 1 member
-# Head is limb (leaf node in graph) as well - we can identify arms vs legs based on coordinates down the spine from head
+# Head is limb (leaf node in graph) as well - we can identify arms vs legs
+# based on coordinates down the spine from head
 # Symmetry across spine: doesn't really matter R/L, but we can assume R/L
 # arms/legs are on either side
 
@@ -128,12 +129,14 @@ model = FEModel3D()
 # Need to add: nodes, materials, sections, members, support, node loads,
 # load combos
 
-# Section based on steel material characteristics - TODO make sure this doesn't add extra weight to the model
+# Section based on steel material characteristics - TODO make sure this
+# doesn't add extra weight to the model
 # A: cross-sectional area (pi*r^2)
 # Iy: second moment of area (inertia) about the weak axis (pi*r^4/4)
 # Iz: second moment of area (inertia) about the strong axis (pi*r^4/4)
 # J: torsion constant (pi*r^4/2)
-# (Source: https://skyciv.com/free-moment-of-inertia-calculator/, http://www.hyperphysics.phy-astr.gsu.edu/hbase/icyl.html)
+# (Source: https://skyciv.com/free-moment-of-inertia-calculator/,
+# http://www.hyperphysics.phy-astr.gsu.edu/hbase/icyl.html)
 model.add_section("S", A=0.001, Iy=1e10, Iz=1e10, J=1e10)
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
@@ -193,7 +196,7 @@ for e in bm.edges:
     # Add point load at CM based on CM percent; calculate length along the
     # member
     if m_distribution > 0:
-        limb_weight = body_weight * m_distribution / 100
+        limb_weight = BODY_WEIGHT * m_distribution / 100
 
         # TODO: double check for direction of the CM position
         cm_length = model.members[member_name].L() * cm_percent / 100
@@ -211,22 +214,22 @@ bm.free()
 logger.info("3D model constructed.")
 
 # Print number of nodes and coordinates
-logger.info(f"\nNodes: {len(model.nodes)}")
+logger.info("\nNodes: %d", len(model.nodes))
 for name, node in model.nodes.items():
-    logger.info(f"{name}: ({node.X:.2f}, {node.Y:.2f}, {node.Z:.2f})")
+    logger.info("%s: (%.2f, %.2f, %.2f)", name, node.X, node.Y, node.Z)
 
 # Print number of members and coordinates
-logger.info(f"\nMembers: {len(model.members)}")
+logger.info("\nMembers: %d", len(model.members))
 for name, member in model.members.items():
     i = member.i_node.name
     j = member.j_node.name
-    logger.info(f"{name}: {i} -> {j}")
+    logger.info("%s: %s -> %s", name, i, j)
 
 logger.info("\nMember point loads:")
 for name, member in model.members.items():
     for load in member.PtLoads:
         direction, magnitude, x, case = load
-        logger.info(f"{name}: {direction} = {magnitude}")
+        logger.info("%s: %s = %s", name, direction, magnitude)
 
 logger.info("\nSupports:")
 for name, node in model.nodes.items():
@@ -256,7 +259,7 @@ for name, node in model.nodes.items():
     dy = node.DY["Combo"]
     dz = node.DZ["Combo"]
     if any(abs(v) > 1e-3 for v in (dx, dy, dz)):
-        logger.info(f"{name}: DX={dx:.2f}  DY={dy:.2f}  DZ={dz:.2f}")
+        logger.info("%s: DX=%.2f  DY=%.2f  DZ=%.2f", name, dx, dy, dz)
 
 # Reactions at supported nodes - forces that supports are exerting to
 # stabilize structure
@@ -266,4 +269,4 @@ for name, node in model.nodes.items():
     ry = node.RxnFY["Combo"]
     rz = node.RxnFZ["Combo"]
     if any(abs(v) > 1e-3 for v in (rx, ry, rz)):
-        logger.info(f"{name}: RxnFX={rx:.2f}  RxnFY={ry:.2f}  RxnFZ={rz:.2f}")
+        logger.info("%s: RxnFX=%.2f  RxnFY=%.2f  RxnFZ=%.2f", name, rx, ry, rz)
