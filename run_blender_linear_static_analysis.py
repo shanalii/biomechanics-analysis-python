@@ -2,14 +2,14 @@
 import logging
 import os
 import sys
-from Pynite import FEModel3D
-
-# Ignore lint errors for imports from Blender's internal module
-import bpy  # type: ignore
-import bmesh  # type: ignore
 
 # Make Blender use venv
 sys.path.insert(0, "/Users/sl/blender-env-3-13/lib/python3.13/site-packages")
+from Pynite import FEModel3D  # pylint: disable=wrong-import-position
+
+# Ignore lint errors for imports from Blender's internal module
+import bpy  # type: ignore  # pylint: disable=wrong-import-position
+import bmesh  # type: ignore  # pylint: disable=wrong-import-position
 
 # How to run:
 # in terminal, ~
@@ -199,10 +199,14 @@ for e in bm.edges:
         limb_weight = BODY_WEIGHT * m_distribution / 100
 
         # TODO: double check for direction of the CM position
+        # visualize point load in blender
         cm_length = model.members[member_name].L() * cm_percent / 100
         model.add_member_pt_load(
             member_name, "FZ", -1 * limb_weight, cm_length, case="Point"
+            # weight should be globally down
         )
+        #bpy.ops.mesh.primitive_cone_add(vertices=8, radius1=0.1, radius2=0, depth=0.1, 
+        # end_fill_type='NGON', calc_uvs=False, enter_editmode=False, align='WORLD', location=)
 
 
 # Consolidate point loads into a load combo, to be referenced in analysis
@@ -270,3 +274,8 @@ for name, node in model.nodes.items():
     rz = node.RxnFZ["Combo"]
     if any(abs(v) > 1e-3 for v in (rx, ry, rz)):
         logger.info("%s: RxnFX=%.2f  RxnFY=%.2f  RxnFZ=%.2f", name, rx, ry, rz)
+
+
+# check units
+# calculate projecting local x axis for adding point load
+# render/visualize in model
