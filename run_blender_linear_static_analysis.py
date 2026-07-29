@@ -205,7 +205,7 @@ for e in bm.edges:
             member_name, "FZ", -1 * limb_weight, cm_length, case="Point"
             # weight should be globally down
         )
-        #bpy.ops.mesh.primitive_cone_add(vertices=8, radius1=0.1, radius2=0, depth=0.1, 
+        #bpy.ops.mesh.primitive_cone_add(vertices=8, radius1=0.1, radius2=0, depth=0.1,
         # end_fill_type='NGON', calc_uvs=False, enter_editmode=False, align='WORLD', location=)
 
 
