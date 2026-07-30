@@ -129,18 +129,25 @@ model = FEModel3D()
 # Need to add: nodes, materials, sections, members, support, node loads,
 # load combos
 
-# Section based on steel material characteristics - TODO make sure this
-# doesn't add extra weight to the model
+# Section based on steel material characteristics
 # A: cross-sectional area (pi*r^2)
+#   (SkyCiv: 1681 mm^2 = 0.001681 m^2)
 # Iy: second moment of area (inertia) about the weak axis (pi*r^4/4)
+#   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
 # Iz: second moment of area (inertia) about the strong axis (pi*r^4/4)
-# J: torsion constant (pi*r^4/2)
+#   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
+# J: torsion constant (pi*r^4/2); calculated assuming circlar cross-section
+#   (https://www.omnicalculator.com/physics/torsional-constant: 5e-7 m^4)
 # (Source: https://skyciv.com/free-moment-of-inertia-calculator/,
 # http://www.hyperphysics.phy-astr.gsu.edu/hbase/icyl.html)
-model.add_section("S", A=0.001, Iy=1e10, Iz=1e10, J=1e10)
+model.add_section("S", A=0.001681, Iy=2e-7, Iz=2e-7, J=5e-7)
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
-# Approximate values for steel beams, from SkyCiv
+# Approximate values for steel beams:
+# E = 200000 MPa (SkyCiv) (1Pa = 1N/m^2)
+# G = 79300 MPa (https://www.engineeringtoolbox.com/modulus-rigidity-d_946.html)
+# nu = 0.27 (SkyCiv)
+# rho = 7850 kg/m^3 (SkyCiv)
 model.add_material(
     "Steel",
     E=200000,  # Young's modulus
@@ -160,8 +167,8 @@ for v in bm.verts:
 
     model.add_node(input_node[0], v.co.x, v.co.y, v.co.z)
 
-    # Add support if needed - fix the node in place from translation and
-    # rotation in all axes
+    # Add support for nodes that make contact
+    # Pined supports - only release rotationally in local Z axis
     if is_supported:
         model.def_support(
             node_name,
@@ -192,6 +199,10 @@ for e in bm.edges:
         input_nodes[j][0],
         "Steel",
         "S")
+
+    # Option to add releases:
+    # https://github.com/JWock82/Pynite/blob/25897a43a4a25f41b3c5709817974169ffff0f4f/Pynite/Member3D.py#L103
+    # Equivalent to SkyCiv node fixicity (currently set to all fixed, which is Pynite default)
 
     # Add point load at CM based on CM percent; calculate length along the
     # member
