@@ -170,7 +170,7 @@ for v in bm.verts:
             support_DZ=True,
             support_RX=True,
             support_RY=True,
-            support_RZ=True,
+            support_RZ=False,
         )
 
 
@@ -268,12 +268,22 @@ for name, node in model.nodes.items():
 # Reactions at supported nodes - forces that supports are exerting to
 # stabilize structure
 logger.info("\nReaction forces (Newtons):")
+weight_on_supports_kg = []
 for name, node in model.nodes.items():
     rx = node.RxnFX["Combo"]
     ry = node.RxnFY["Combo"]
     rz = node.RxnFZ["Combo"]
     if any(abs(v) > 1e-3 for v in (rx, ry, rz)):
         logger.info("%s: RxnFX=%.2f  RxnFY=%.2f  RxnFZ=%.2f", name, rx, ry, rz)
+
+        # Calculate downwards weight (kg) on supported nodes
+        # Flip sign because reaction force is in +Z direction
+        weight_on_supports_kg.append([name, -int(rz / 9.81)])
+
+# Log weight exerted on each supported node
+logger.info("Weight exerted on support nodes (kg):")
+for node_name, w in weight_on_supports_kg:
+    logger.info("%s: %.2f", node_name, w)
 
 
 # check units
