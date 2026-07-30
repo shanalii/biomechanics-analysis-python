@@ -51,8 +51,9 @@ logger.addHandler(console_handler)
 ### MECHANICS SETUP ###
 # Model for: 2026.07.16_Basic Stick Figure Posed.blend
 
-# Input: total weight (kg)
-BODY_WEIGHT = 100
+# Input: total body mass (kg)
+BODY_MASS_KG = 100
+G = 9.81  # m/s^2
 
 # TODO2: global ordering of nodes/members to set loads; for now, hard-code based on order created
 # Coordinate-based (eg. by height or left/right) has many edge cases based on figure position
@@ -94,7 +95,7 @@ input_nodes = [
     ["r_toe", False],
 ]
 
-# [name, mass_percent, cm_percent]
+# [name, mass_percent (kg), cm_percent]
 # Flipped values (100 - cm_percent) for members with reversed x-axis
 # Ordering of member nodes determined by order of creation
 # However, cm_percent should be top-to-bottom based on human anatomy
@@ -209,14 +210,21 @@ for e in bm.edges:
     # https://pynite.readthedocs.io/en/latest/member.html#local-coordinate-system
     # Each member starts at its i-node and ends at its j-node.
     # The local x-axis for the member is defined by a vector going from the i-node to the j-node.
+
+    # UNIT NOTE: we will calculate the weight (Newtons) by multiplying input mass by g (9.81m/s^2).
+    # This is for the calculations to scientifically make sense, though we ultimately need the
+    # weight on supported nodes in kg - this is dealt with in post-processing.
+
     if m_distribution > 0:
-        limb_weight = BODY_WEIGHT * m_distribution / 100
+        limb_weight = BODY_MASS_KG * G * m_distribution / 100  # Newtons
         # visualize point load in blender
-        cm_length = model.members[member_name].L() * cm_percent / 100
+        cm_length = model.members[member_name].L() * cm_percent / 100  # Meters
         model.add_member_pt_load(
             member_name, "FZ", -1 * limb_weight, cm_length, case="Point"
-            # weight should be globally down
+            # Weight should be globally downwards in direction
         )
+
+        # TODO: render in blender
         #bpy.ops.mesh.primitive_cone_add(vertices=8, radius1=0.1, radius2=0, depth=0.1,
         # end_fill_type='NGON', calc_uvs=False, enter_editmode=False, align='WORLD', location=)
 
@@ -290,7 +298,7 @@ for name, node in model.nodes.items():
 
         # Calculate downwards weight (kg) on supported nodes
         # Flip sign because reaction force is in +Z direction
-        weight_on_supports_kg.append([name, -int(rz / 9.81)])
+        weight_on_supports_kg.append([name, -int(rz / G)])
 
 # Log weight exerted on each supported node
 logger.info("Weight exerted on support nodes (kg):")
