@@ -51,8 +51,6 @@ logger.addHandler(console_handler)
 ### MECHANICS SETUP ###
 # Model for: 2026.07.16_Basic Stick Figure Posed.blend
 
-# TODO: double check units (kips???)
-
 # Input: total weight (kg)
 BODY_WEIGHT = 100
 
@@ -97,25 +95,28 @@ input_nodes = [
 ]
 
 # [name, mass_percent, cm_percent]
+# Flipped values (100 - cm_percent) for members with reversed x-axis
+# Ordering of member nodes determined by order of creation
+# However, cm_percent should be top-to-bottom based on human anatomy
 input_members = [
     ["l_upperarm", 2.71, 57.72],
     ["l_forearm", 1.62, 45.74],
     ["l_back", 0, 0],
-    ["r_upperarm", 2.71, 57.72],
-    ["r_forearm", 1.62, 45.74],
+    ["r_upperarm", 2.71, 42.28],  # Flip
+    ["r_forearm", 1.62, 54.26],  # Flip
     ["r_hand", 0.61, 79.00],
     ["r_back", 0, 0],
     ["neck", 0, 0],
-    ["head", 6.94, 59.76],
+    ["head", 6.94, 40.24],  # Flip
     ["spine", 43.46, 44.86],
     ["r_pelvis", 0, 0],
     ["l_pelvis", 0, 0],
     ["l_thigh", 14.16, 40.95],
     ["l_calf", 4.33, 44.59],
     ["l_foot", 1.37, 44.15],
-    ["r_thigh", 14.16, 40.95],
-    ["r_calf", 4.33, 44.59],
-    ["r_foot", 1.37, 44.15],
+    ["r_thigh", 14.16, 59.05],  # Flip
+    ["r_calf", 4.33, 55.41],  # Flip
+    ["r_foot", 1.37, 55.85],  # Flip
     ["l_hand", 0.61, 79.00],
 ]
 
@@ -204,12 +205,12 @@ for e in bm.edges:
     # https://github.com/JWock82/Pynite/blob/25897a43a4a25f41b3c5709817974169ffff0f4f/Pynite/Member3D.py#L103
     # Equivalent to SkyCiv node fixicity (currently set to all fixed, which is Pynite default)
 
-    # Add point load at CM based on CM percent; calculate length along the
-    # member
+    # Add point load at CM based on CM percent; calculate length along the member
+    # https://pynite.readthedocs.io/en/latest/member.html#local-coordinate-system
+    # Each member starts at its i-node and ends at its j-node.
+    # The local x-axis for the member is defined by a vector going from the i-node to the j-node.
     if m_distribution > 0:
         limb_weight = BODY_WEIGHT * m_distribution / 100
-
-        # TODO: double check for direction of the CM position
         # visualize point load in blender
         cm_length = model.members[member_name].L() * cm_percent / 100
         model.add_member_pt_load(
@@ -220,26 +221,26 @@ for e in bm.edges:
         # end_fill_type='NGON', calc_uvs=False, enter_editmode=False, align='WORLD', location=)
 
 
-# Consolidate point loads into a load combo, to be referenced in analysis
-# results
+# Consolidate point loads into a load combo, to be referenced in results
 model.add_load_combo("Combo", {"Point": 1.0})
 
 # Free mesh from memory
 bm.free()
 logger.info("3D model constructed.")
 
-# Print number of nodes and coordinates
+# Log number of nodes and coordinates
 logger.info("\nNodes: %d", len(model.nodes))
 for name, node in model.nodes.items():
     logger.info("%s: (%.2f, %.2f, %.2f)", name, node.X, node.Y, node.Z)
 
-# Print number of members and coordinates
+# Log number of members and coordinates
 logger.info("\nMembers: %d", len(model.members))
 for name, member in model.members.items():
     i = member.i_node.name
     j = member.j_node.name
     logger.info("%s: %s -> %s", name, i, j)
 
+# Log point loads
 logger.info("\nMember point loads:")
 for name, member in model.members.items():
     for load in member.PtLoads:
@@ -296,7 +297,5 @@ logger.info("Weight exerted on support nodes (kg):")
 for node_name, w in weight_on_supports_kg:
     logger.info("%s: %.2f", node_name, w)
 
-
-# check units
 # calculate projecting local x axis for adding point load
 # render/visualize in model
