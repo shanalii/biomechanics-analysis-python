@@ -304,6 +304,3 @@ for name, node in model.nodes.items():
 logger.info("Weight exerted on support nodes (kg):")
 for node_name, w in weight_on_supports_kg:
     logger.info("%s: %.2f", node_name, w)
-
-# calculate projecting local x axis for adding point load
-# render/visualize in model
