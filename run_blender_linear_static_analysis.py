@@ -70,6 +70,7 @@ me = bpy.context.object.data
 bm = bmesh.new()  # create an empty BMesh
 bm.from_mesh(me)  # fill it in from a Mesh
 
+# Input nodes represending each body joint/connection
 # Order is specific to this model - manually listed from Blender coordinates
 # [name, is_supported]
 input_nodes = [
@@ -95,6 +96,7 @@ input_nodes = [
     ["r_toe", False],
 ]
 
+# Members connecting bodily nodes
 # [name, mass_percent (kg), cm_percent]
 # Flipped values (100 - cm_percent) for members with reversed x-axis
 # Ordering of member nodes determined by order of creation
@@ -134,15 +136,16 @@ model = FEModel3D()
 # Section based on steel material characteristics
 # A: cross-sectional area (pi*r^2)
 #   (SkyCiv: 1681 mm^2 = 0.001681 m^2)
-# Iy: second moment of area (inertia) about the weak axis (pi*r^4/4)
+# Iy: second moment of area (m. o. inertia) about the weak axis (pi*r^4/4)
 #   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
-# Iz: second moment of area (inertia) about the strong axis (pi*r^4/4)
+# Iz: second moment of area (m. o. inertia) about the strong axis (pi*r^4/4)
 #   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
 # J: torsion constant (pi*r^4/2); calculated assuming circlar cross-section
-#   (https://www.omnicalculator.com/physics/torsional-constant: 5e-7 m^4)
+#   First calculate radius of circle with given A (r = 0.02313 m)
+#   (https://www.omnicalculator.com/physics/torsional-constant: 4.496e-7 m^4)
 # (Source: https://skyciv.com/free-moment-of-inertia-calculator/,
 # http://www.hyperphysics.phy-astr.gsu.edu/hbase/icyl.html)
-model.add_section("S", A=0.001681, Iy=2e-7, Iz=2e-7, J=5e-7)
+model.add_section("S", A=0.001681, Iy=2.353e-7, Iz=2.353e-7, J=4.496e-7)
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
 # Approximate values for steel beams:
