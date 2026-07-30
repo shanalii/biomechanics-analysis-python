@@ -51,10 +51,9 @@ logger.addHandler(console_handler)
 ### MECHANICS SETUP ###
 # Model for: 2026.07.16_Basic Stick Figure Posed.blend
 
-# TODO: double check units (kips???)
-
-# Input: total weight (kg)
-BODY_WEIGHT = 100
+# Input: total body mass (kg)
+BODY_MASS_KG = 100
+G = 9.81  # m/s^2
 
 # TODO2: global ordering of nodes/members to set loads; for now, hard-code based on order created
 # Coordinate-based (eg. by height or left/right) has many edge cases based on figure position
@@ -96,26 +95,29 @@ input_nodes = [
     ["r_toe", False],
 ]
 
-# [name, mass_percent, cm_percent]
+# [name, mass_percent (kg), cm_percent]
+# Flipped values (100 - cm_percent) for members with reversed x-axis
+# Ordering of member nodes determined by order of creation
+# However, cm_percent should be top-to-bottom based on human anatomy
 input_members = [
     ["l_upperarm", 2.71, 57.72],
     ["l_forearm", 1.62, 45.74],
     ["l_back", 0, 0],
-    ["r_upperarm", 2.71, 57.72],
-    ["r_forearm", 1.62, 45.74],
+    ["r_upperarm", 2.71, 42.28],  # Flip
+    ["r_forearm", 1.62, 54.26],  # Flip
     ["r_hand", 0.61, 79.00],
     ["r_back", 0, 0],
     ["neck", 0, 0],
-    ["head", 6.94, 59.76],
+    ["head", 6.94, 40.24],  # Flip
     ["spine", 43.46, 44.86],
     ["r_pelvis", 0, 0],
     ["l_pelvis", 0, 0],
     ["l_thigh", 14.16, 40.95],
     ["l_calf", 4.33, 44.59],
     ["l_foot", 1.37, 44.15],
-    ["r_thigh", 14.16, 40.95],
-    ["r_calf", 4.33, 44.59],
-    ["r_foot", 1.37, 44.15],
+    ["r_thigh", 14.16, 59.05],  # Flip
+    ["r_calf", 4.33, 55.41],  # Flip
+    ["r_foot", 1.37, 55.85],  # Flip
     ["l_hand", 0.61, 79.00],
 ]
 
@@ -129,18 +131,25 @@ model = FEModel3D()
 # Need to add: nodes, materials, sections, members, support, node loads,
 # load combos
 
-# Section based on steel material characteristics - TODO make sure this
-# doesn't add extra weight to the model
+# Section based on steel material characteristics
 # A: cross-sectional area (pi*r^2)
+#   (SkyCiv: 1681 mm^2 = 0.001681 m^2)
 # Iy: second moment of area (inertia) about the weak axis (pi*r^4/4)
+#   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
 # Iz: second moment of area (inertia) about the strong axis (pi*r^4/4)
-# J: torsion constant (pi*r^4/2)
+#   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
+# J: torsion constant (pi*r^4/2); calculated assuming circlar cross-section
+#   (https://www.omnicalculator.com/physics/torsional-constant: 5e-7 m^4)
 # (Source: https://skyciv.com/free-moment-of-inertia-calculator/,
 # http://www.hyperphysics.phy-astr.gsu.edu/hbase/icyl.html)
-model.add_section("S", A=0.001, Iy=1e10, Iz=1e10, J=1e10)
+model.add_section("S", A=0.001681, Iy=2e-7, Iz=2e-7, J=5e-7)
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
-# Approximate values for steel beams, from SkyCiv
+# Approximate values for steel beams:
+# E = 200000 MPa (SkyCiv) (1Pa = 1N/m^2)
+# G = 79300 MPa (https://www.engineeringtoolbox.com/modulus-rigidity-d_946.html)
+# nu = 0.27 (SkyCiv)
+# rho = 7850 kg/m^3 (SkyCiv)
 model.add_material(
     "Steel",
     E=200000,  # Young's modulus
@@ -160,8 +169,8 @@ for v in bm.verts:
 
     model.add_node(input_node[0], v.co.x, v.co.y, v.co.z)
 
-    # Add support if needed - fix the node in place from translation and
-    # rotation in all axes
+    # Add support for nodes that make contact
+    # Pined supports - only release rotationally in local Z axis
     if is_supported:
         model.def_support(
             node_name,
@@ -170,7 +179,7 @@ for v in bm.verts:
             support_DZ=True,
             support_RX=True,
             support_RY=True,
-            support_RZ=True,
+            support_RZ=False,
         )
 
 
@@ -193,42 +202,53 @@ for e in bm.edges:
         "Steel",
         "S")
 
-    # Add point load at CM based on CM percent; calculate length along the
-    # member
-    if m_distribution > 0:
-        limb_weight = BODY_WEIGHT * m_distribution / 100
+    # Option to add releases:
+    # https://github.com/JWock82/Pynite/blob/25897a43a4a25f41b3c5709817974169ffff0f4f/Pynite/Member3D.py#L103
+    # Equivalent to SkyCiv node fixicity (currently set to all fixed, which is Pynite default)
 
-        # TODO: double check for direction of the CM position
+    # Add point load at CM based on CM percent; calculate length along the member
+    # https://pynite.readthedocs.io/en/latest/member.html#local-coordinate-system
+    # Each member starts at its i-node and ends at its j-node.
+    # The local x-axis for the member is defined by a vector going from the i-node to the j-node.
+
+    # UNIT NOTE: we will calculate the weight (Newtons) by multiplying input mass by g (9.81m/s^2).
+    # This is for the calculations to scientifically make sense, though we ultimately need the
+    # weight on supported nodes in kg - this is dealt with in post-processing.
+
+    if m_distribution > 0:
+        limb_weight = BODY_MASS_KG * G * m_distribution / 100  # Newtons
         # visualize point load in blender
-        cm_length = model.members[member_name].L() * cm_percent / 100
+        cm_length = model.members[member_name].L() * cm_percent / 100  # Meters
         model.add_member_pt_load(
             member_name, "FZ", -1 * limb_weight, cm_length, case="Point"
-            # weight should be globally down
+            # Weight should be globally downwards in direction
         )
+
+        # TODO: render in blender
         #bpy.ops.mesh.primitive_cone_add(vertices=8, radius1=0.1, radius2=0, depth=0.1,
         # end_fill_type='NGON', calc_uvs=False, enter_editmode=False, align='WORLD', location=)
 
 
-# Consolidate point loads into a load combo, to be referenced in analysis
-# results
+# Consolidate point loads into a load combo, to be referenced in results
 model.add_load_combo("Combo", {"Point": 1.0})
 
 # Free mesh from memory
 bm.free()
 logger.info("3D model constructed.")
 
-# Print number of nodes and coordinates
+# Log number of nodes and coordinates
 logger.info("\nNodes: %d", len(model.nodes))
 for name, node in model.nodes.items():
     logger.info("%s: (%.2f, %.2f, %.2f)", name, node.X, node.Y, node.Z)
 
-# Print number of members and coordinates
+# Log number of members and coordinates
 logger.info("\nMembers: %d", len(model.members))
 for name, member in model.members.items():
     i = member.i_node.name
     j = member.j_node.name
     logger.info("%s: %s -> %s", name, i, j)
 
+# Log point loads
 logger.info("\nMember point loads:")
 for name, member in model.members.items():
     for load in member.PtLoads:
@@ -268,6 +288,7 @@ for name, node in model.nodes.items():
 # Reactions at supported nodes - forces that supports are exerting to
 # stabilize structure
 logger.info("\nReaction forces (Newtons):")
+weight_on_supports_kg = []
 for name, node in model.nodes.items():
     rx = node.RxnFX["Combo"]
     ry = node.RxnFY["Combo"]
@@ -275,7 +296,14 @@ for name, node in model.nodes.items():
     if any(abs(v) > 1e-3 for v in (rx, ry, rz)):
         logger.info("%s: RxnFX=%.2f  RxnFY=%.2f  RxnFZ=%.2f", name, rx, ry, rz)
 
+        # Calculate downwards weight (kg) on supported nodes
+        # Flip sign because reaction force is in +Z direction
+        weight_on_supports_kg.append([name, -int(rz / G)])
 
-# check units
+# Log weight exerted on each supported node
+logger.info("Weight exerted on support nodes (kg):")
+for node_name, w in weight_on_supports_kg:
+    logger.info("%s: %.2f", node_name, w)
+
 # calculate projecting local x axis for adding point load
 # render/visualize in model
