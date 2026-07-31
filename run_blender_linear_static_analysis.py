@@ -100,7 +100,8 @@ input_nodes = [
 # [name, mass_percent, cm_percent]
 # Flipped values (100 - cm_percent) for members with reversed x-axis
 # Ordering of member nodes determined by order of creation
-# However, cm_percent should be top-to-bottom based on human anatomy
+# However, cm_percent was calculated from the "proximal end"
+# https://en.wikipedia.org/wiki/Anatomical_terms_of_location#Proximal_and_distal
 input_members = [
     ["l_upperarm", 2.71, 57.72],
     ["l_forearm", 1.62, 45.74],
@@ -110,8 +111,8 @@ input_members = [
     ["r_hand", 0.61, 79.00],
     ["r_back", 0, 0],
     ["neck", 0, 0],
-    ["head", 6.94, 40.24],  # Flip
-    ["spine", 43.46, 44.86],
+    ["head", 6.94, 59.76],
+    ["spine", 43.46, 55.14],  # Flip
     ["r_pelvis", 0, 0],
     ["l_pelvis", 0, 0],
     ["l_thigh", 14.16, 40.95],
@@ -153,6 +154,7 @@ model.add_section("S", A=0.001681, Iy=2.353e-7, Iz=2.353e-7, J=4.496e-7)
 # G = 79300 MPa (https://www.engineeringtoolbox.com/modulus-rigidity-d_946.html)
 # nu = 0.27 (SkyCiv)
 # rho = 7850 kg/m^3 (SkyCiv)
+# G is optional in SkyCiv?
 model.add_material(
     "Steel",
     E=200000,  # Young's modulus
@@ -232,17 +234,17 @@ for e in bm.edges:
         # First, find the coordinate of the COM point along the member
         start_node = member.i_node
         end_node = member.j_node
-        c_x = start_node.X + cm_percent * (end_node.X - start_node.X)
-        c_y = start_node.Y + cm_percent * (end_node.Y - start_node.Y)
-        c_z = start_node.Z + cm_percent * (end_node.Z - start_node.Z)
+        c_x = start_node.X + cm_percent / 100 * (end_node.X - start_node.X)
+        c_y = start_node.Y + cm_percent / 100 * (end_node.Y - start_node.Y)
+        c_z = start_node.Z + cm_percent / 100 * (end_node.Z - start_node.Z)
 
         # Draw cone in Blender at the coordinate
-        # Not working properly rn bc of local/global coordinate translations
+        # Depends on the model position being at (0,0,0)
         bpy.ops.mesh.primitive_cone_add(
             vertices = 8,
-            radius1 = 0.02,
-            radius2 = 0,
-            depth = 0.04,
+            radius1 = 0,
+            radius2 = 0.03,
+            depth = 0.05,
             enter_editmode = False,
             align = 'WORLD',
             location = (c_x, c_y, c_z)
