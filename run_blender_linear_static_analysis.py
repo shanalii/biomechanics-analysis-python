@@ -220,17 +220,32 @@ for e in bm.edges:
 
     if m_distribution > 0:
         limb_weight = BODY_MASS_KG * G * m_distribution / 100  # Newtons
-        # visualize point load in blender
-        cm_length = model.members[member_name].L() * cm_percent / 100  # Meters
+        member = model.members[member_name]
+        member_length = member.L()
+        cm_length = member_length * cm_percent / 100  # Meters
         model.add_member_pt_load(
             member_name, "FZ", -1 * limb_weight, cm_length, case="Point"
             # Weight should be globally downwards in direction
         )
 
-        # TODO: render in blender
-        #bpy.ops.mesh.primitive_cone_add(vertices=8, radius1=0.1, radius2=0, depth=0.1,
-        # end_fill_type='NGON', calc_uvs=False, enter_editmode=False, align='WORLD', location=)
+        # Visualize the COM point in Blender
+        # First, find the coordinate of the COM point along the member
+        start_node = member.i_node
+        end_node = member.j_node
+        c_x = start_node.X + cm_percent * (end_node.X - start_node.X)
+        c_y = start_node.Y + cm_percent * (end_node.Y - start_node.Y)
+        c_z = start_node.Z + cm_percent * (end_node.Z - start_node.Z)
 
+        # Draw cone in Blender at the coordinate
+        bpy.ops.mesh.primitive_cone_add(
+            vertices = 8,
+            radius1 = 0.02,
+            radius2 = 0,
+            depth = 0.04,
+            enter_editmode = False,
+            align = 'WORLD',
+            location = (c_x, c_y, c_z)
+        )
 
 # Consolidate point loads into a load combo, to be referenced in results
 model.add_load_combo("Combo", {"Point": 1.0})
