@@ -70,6 +70,7 @@ me = bpy.context.object.data
 bm = bmesh.new()  # create an empty BMesh
 bm.from_mesh(me)  # fill it in from a Mesh
 
+# Input nodes represending each body joint/connection
 # Order is specific to this model - manually listed from Blender coordinates
 # [name, is_supported]
 input_nodes = [
@@ -95,10 +96,12 @@ input_nodes = [
     ["r_toe", False],
 ]
 
-# [name, mass_percent (kg), cm_percent]
+# Members connecting bodily nodes
+# [name, mass_percent, cm_percent]
 # Flipped values (100 - cm_percent) for members with reversed x-axis
 # Ordering of member nodes determined by order of creation
-# However, cm_percent should be top-to-bottom based on human anatomy
+# However, cm_percent was calculated from the "proximal end"
+# https://en.wikipedia.org/wiki/Anatomical_terms_of_location#Proximal_and_distal
 input_members = [
     ["l_upperarm", 2.71, 57.72],
     ["l_forearm", 1.62, 45.74],
@@ -108,8 +111,8 @@ input_members = [
     ["r_hand", 0.61, 79.00],
     ["r_back", 0, 0],
     ["neck", 0, 0],
-    ["head", 6.94, 40.24],  # Flip
-    ["spine", 43.46, 44.86],
+    ["head", 6.94, 59.76],
+    ["spine", 43.46, 55.14],  # Flip
     ["r_pelvis", 0, 0],
     ["l_pelvis", 0, 0],
     ["l_thigh", 14.16, 40.95],
@@ -134,15 +137,16 @@ model = FEModel3D()
 # Section based on steel material characteristics
 # A: cross-sectional area (pi*r^2)
 #   (SkyCiv: 1681 mm^2 = 0.001681 m^2)
-# Iy: second moment of area (inertia) about the weak axis (pi*r^4/4)
+# Iy: second moment of area (m. o. inertia) about the weak axis (pi*r^4/4)
 #   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
-# Iz: second moment of area (inertia) about the strong axis (pi*r^4/4)
+# Iz: second moment of area (m. o. inertia) about the strong axis (pi*r^4/4)
 #   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
 # J: torsion constant (pi*r^4/2); calculated assuming circlar cross-section
-#   (https://www.omnicalculator.com/physics/torsional-constant: 5e-7 m^4)
+#   First calculate radius of circle with given A (r = 0.02313 m)
+#   (https://www.omnicalculator.com/physics/torsional-constant: 4.496e-7 m^4)
 # (Source: https://skyciv.com/free-moment-of-inertia-calculator/,
 # http://www.hyperphysics.phy-astr.gsu.edu/hbase/icyl.html)
-model.add_section("S", A=0.001681, Iy=2e-7, Iz=2e-7, J=5e-7)
+model.add_section("S", A=0.001681, Iy=2.353e-7, Iz=2.353e-7, J=4.496e-7)
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
 # Approximate values for steel beams:
@@ -150,6 +154,7 @@ model.add_section("S", A=0.001681, Iy=2e-7, Iz=2e-7, J=5e-7)
 # G = 79300 MPa (https://www.engineeringtoolbox.com/modulus-rigidity-d_946.html)
 # nu = 0.27 (SkyCiv)
 # rho = 7850 kg/m^3 (SkyCiv)
+# G is optional in SkyCiv?
 model.add_material(
     "Steel",
     E=200000,  # Young's modulus
@@ -217,17 +222,33 @@ for e in bm.edges:
 
     if m_distribution > 0:
         limb_weight = BODY_MASS_KG * G * m_distribution / 100  # Newtons
-        # visualize point load in blender
-        cm_length = model.members[member_name].L() * cm_percent / 100  # Meters
+        member = model.members[member_name]
+        member_length = member.L()
+        cm_length = member_length * cm_percent / 100  # Meters
         model.add_member_pt_load(
             member_name, "FZ", -1 * limb_weight, cm_length, case="Point"
             # Weight should be globally downwards in direction
         )
 
-        # TODO: render in blender
-        #bpy.ops.mesh.primitive_cone_add(vertices=8, radius1=0.1, radius2=0, depth=0.1,
-        # end_fill_type='NGON', calc_uvs=False, enter_editmode=False, align='WORLD', location=)
+        # Visualize the COM point in Blender
+        # First, find the coordinate of the COM point along the member
+        start_node = member.i_node
+        end_node = member.j_node
+        c_x = start_node.X + cm_percent / 100 * (end_node.X - start_node.X)
+        c_y = start_node.Y + cm_percent / 100 * (end_node.Y - start_node.Y)
+        c_z = start_node.Z + cm_percent / 100 * (end_node.Z - start_node.Z)
 
+        # Draw cone in Blender at the coordinate
+        # Depends on the model position being at (0,0,0)
+        bpy.ops.mesh.primitive_cone_add(
+            vertices = 8,
+            radius1 = 0,
+            radius2 = 0.03,
+            depth = 0.05,
+            enter_editmode = False,
+            align = 'WORLD',
+            location = (c_x, c_y, c_z)
+        )
 
 # Consolidate point loads into a load combo, to be referenced in results
 model.add_load_combo("Combo", {"Point": 1.0})
@@ -288,7 +309,7 @@ for name, node in model.nodes.items():
 # Reactions at supported nodes - forces that supports are exerting to
 # stabilize structure
 logger.info("\nReaction forces (Newtons):")
-weight_on_supports_kg = []
+weights_on_supports_kg = []
 for name, node in model.nodes.items():
     rx = node.RxnFX["Combo"]
     ry = node.RxnFY["Combo"]
@@ -298,9 +319,9 @@ for name, node in model.nodes.items():
 
         # Calculate downwards weight (kg) on supported nodes
         # Flip sign because reaction force is in +Z direction
-        weight_on_supports_kg.append([name, -int(rz / G)])
+        weights_on_supports_kg.append([name, -int(rz / G)])
 
 # Log weight exerted on each supported node
 logger.info("Weight exerted on support nodes (kg):")
-for node_name, w in weight_on_supports_kg:
+for node_name, w in weights_on_supports_kg:
     logger.info("%s: %.2f", node_name, w)
