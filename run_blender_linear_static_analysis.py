@@ -97,7 +97,7 @@ input_nodes = [
 ]
 
 # Members connecting bodily nodes
-# [name, mass_percent (kg), cm_percent]
+# [name, mass_percent, cm_percent]
 # Flipped values (100 - cm_percent) for members with reversed x-axis
 # Ordering of member nodes determined by order of creation
 # However, cm_percent should be top-to-bottom based on human anatomy
@@ -237,6 +237,7 @@ for e in bm.edges:
         c_z = start_node.Z + cm_percent * (end_node.Z - start_node.Z)
 
         # Draw cone in Blender at the coordinate
+        # Not working properly rn bc of local/global coordinate translations
         bpy.ops.mesh.primitive_cone_add(
             vertices = 8,
             radius1 = 0.02,
@@ -306,7 +307,7 @@ for name, node in model.nodes.items():
 # Reactions at supported nodes - forces that supports are exerting to
 # stabilize structure
 logger.info("\nReaction forces (Newtons):")
-weight_on_supports_kg = []
+weights_on_supports_kg = []
 for name, node in model.nodes.items():
     rx = node.RxnFX["Combo"]
     ry = node.RxnFY["Combo"]
@@ -316,9 +317,9 @@ for name, node in model.nodes.items():
 
         # Calculate downwards weight (kg) on supported nodes
         # Flip sign because reaction force is in +Z direction
-        weight_on_supports_kg.append([name, -int(rz / G)])
+        weights_on_supports_kg.append([name, -int(rz / G)])
 
 # Log weight exerted on each supported node
 logger.info("Weight exerted on support nodes (kg):")
-for node_name, w in weight_on_supports_kg:
+for node_name, w in weights_on_supports_kg:
     logger.info("%s: %.2f", node_name, w)
