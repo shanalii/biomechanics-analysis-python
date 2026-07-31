@@ -1,97 +1,96 @@
-11:57:45 INFO: 3D model constructed.
-11:57:45 INFO: 
+12:11:15 INFO: 3D model constructed.
+12:11:15 INFO: 
 Nodes: 20
-11:57:45 INFO: l_shoulder: (0.00, 0.00, 0.00)
-11:57:45 INFO: l_elbow: (-0.01, -0.11, -0.19)
-11:57:45 INFO: l_wrist: (-0.01, -0.01, -0.42)
-11:57:45 INFO: l_finger: (-0.03, 0.19, -0.42)
-11:57:45 INFO: r_shoulder: (0.36, 0.05, -0.03)
-11:57:45 INFO: r_elbow: (0.45, 0.07, -0.23)
-11:57:45 INFO: r_wrist: (0.22, 0.19, -0.27)
-11:57:45 INFO: r_finger: (0.10, 0.31, -0.36)
-11:57:45 INFO: neck_base: (0.18, 0.03, -0.02)
-11:57:45 INFO: head_base: (0.17, 0.12, -0.01)
-11:57:45 INFO: head_top: (0.15, 0.38, 0.02)
-11:57:45 INFO: spine_base: (0.28, -0.53, -0.14)
-11:57:45 INFO: r_hip: (0.38, -0.51, -0.15)
-11:57:45 INFO: l_hip: (0.17, -0.54, -0.13)
-11:57:45 INFO: l_knee: (0.21, -0.65, -0.45)
-11:57:45 INFO: l_heel: (0.37, -0.84, -0.24)
-11:57:45 INFO: l_toe: (0.43, -1.01, -0.39)
-11:57:45 INFO: r_knee: (0.62, -0.54, -0.38)
-11:57:45 INFO: r_heel: (0.55, -0.88, -0.36)
-11:57:45 INFO: r_toe: (0.57, -1.11, -0.40)
-11:57:45 INFO: 
+12:11:15 INFO: l_shoulder: (0.00, 0.00, 0.00)
+12:11:15 INFO: l_elbow: (-0.01, -0.11, -0.19)
+12:11:15 INFO: l_wrist: (-0.01, -0.01, -0.42)
+12:11:15 INFO: l_finger: (-0.03, 0.19, -0.42)
+12:11:15 INFO: r_shoulder: (0.36, 0.05, -0.03)
+12:11:15 INFO: r_elbow: (0.45, 0.07, -0.23)
+12:11:15 INFO: r_wrist: (0.22, 0.19, -0.27)
+12:11:15 INFO: r_finger: (0.10, 0.31, -0.36)
+12:11:15 INFO: neck_base: (0.18, 0.03, -0.02)
+12:11:15 INFO: head_base: (0.17, 0.12, -0.01)
+12:11:15 INFO: head_top: (0.15, 0.38, 0.02)
+12:11:15 INFO: spine_base: (0.28, -0.53, -0.14)
+12:11:15 INFO: r_hip: (0.38, -0.51, -0.15)
+12:11:15 INFO: l_hip: (0.17, -0.54, -0.13)
+12:11:15 INFO: l_knee: (0.21, -0.65, -0.45)
+12:11:15 INFO: l_heel: (0.37, -0.84, -0.24)
+12:11:15 INFO: l_toe: (0.43, -1.01, -0.39)
+12:11:15 INFO: r_knee: (0.62, -0.54, -0.38)
+12:11:15 INFO: r_heel: (0.55, -0.88, -0.36)
+12:11:15 INFO: r_toe: (0.57, -1.11, -0.40)
+12:11:15 INFO: 
 Members: 19
-11:57:45 INFO: l_upperarm: l_shoulder -> l_elbow
-11:57:45 INFO: l_forearm: l_elbow -> l_wrist
-11:57:45 INFO: l_back: neck_base -> l_shoulder
-11:57:45 INFO: r_upperarm: r_elbow -> r_shoulder
-11:57:45 INFO: r_forearm: r_wrist -> r_elbow
-11:57:45 INFO: r_hand: r_wrist -> r_finger
-11:57:45 INFO: r_back: r_shoulder -> neck_base
-11:57:45 INFO: neck: neck_base -> head_base
-11:57:45 INFO: head: head_base -> head_top
-11:57:45 INFO: spine: neck_base -> spine_base
-11:57:45 INFO: r_pelvis: r_hip -> spine_base
-11:57:45 INFO: l_pelvis: spine_base -> l_hip
-11:57:45 INFO: l_thigh: l_hip -> l_knee
-11:57:45 INFO: l_calf: l_knee -> l_heel
-11:57:45 INFO: l_foot: l_heel -> l_toe
-11:57:45 INFO: r_thigh: r_knee -> r_hip
-11:57:45 INFO: r_calf: r_heel -> r_knee
-11:57:45 INFO: r_foot: r_toe -> r_heel
-11:57:45 INFO: l_hand: l_wrist -> l_finger
-11:57:45 INFO: 
+12:11:15 INFO: l_upperarm: l_shoulder -> l_elbow
+12:11:15 INFO: l_forearm: l_elbow -> l_wrist
+12:11:15 INFO: l_back: neck_base -> l_shoulder
+12:11:15 INFO: r_upperarm: r_elbow -> r_shoulder
+12:11:15 INFO: r_forearm: r_wrist -> r_elbow
+12:11:15 INFO: r_hand: r_wrist -> r_finger
+12:11:15 INFO: r_back: r_shoulder -> neck_base
+12:11:15 INFO: neck: neck_base -> head_base
+12:11:15 INFO: head: head_base -> head_top
+12:11:15 INFO: spine: neck_base -> spine_base
+12:11:15 INFO: r_pelvis: r_hip -> spine_base
+12:11:15 INFO: l_pelvis: spine_base -> l_hip
+12:11:15 INFO: l_thigh: l_hip -> l_knee
+12:11:15 INFO: l_calf: l_knee -> l_heel
+12:11:15 INFO: l_foot: l_heel -> l_toe
+12:11:15 INFO: r_thigh: r_knee -> r_hip
+12:11:15 INFO: r_calf: r_heel -> r_knee
+12:11:15 INFO: r_foot: r_toe -> r_heel
+12:11:15 INFO: l_hand: l_wrist -> l_finger
+12:11:15 INFO: 
 Member point loads:
-11:57:45 INFO: l_upperarm: FZ = -26.585099999999997
-11:57:45 INFO: l_forearm: FZ = -15.8922
-11:57:45 INFO: r_upperarm: FZ = -26.585099999999997
-11:57:45 INFO: r_forearm: FZ = -15.8922
-11:57:45 INFO: r_hand: FZ = -5.9841
-11:57:45 INFO: head: FZ = -68.0814
-11:57:45 INFO: spine: FZ = -426.3426
-11:57:45 INFO: l_thigh: FZ = -138.9096
-11:57:45 INFO: l_calf: FZ = -42.47730000000001
-11:57:45 INFO: l_foot: FZ = -13.4397
-11:57:45 INFO: r_thigh: FZ = -138.9096
-11:57:45 INFO: r_calf: FZ = -42.47730000000001
-11:57:45 INFO: r_foot: FZ = -13.4397
-11:57:45 INFO: l_hand: FZ = -5.9841
-11:57:45 INFO: 
+12:11:15 INFO: l_upperarm: FZ = -26.585099999999997
+12:11:15 INFO: l_forearm: FZ = -15.8922
+12:11:15 INFO: r_upperarm: FZ = -26.585099999999997
+12:11:15 INFO: r_forearm: FZ = -15.8922
+12:11:15 INFO: r_hand: FZ = -5.9841
+12:11:15 INFO: head: FZ = -68.0814
+12:11:15 INFO: spine: FZ = -426.3426
+12:11:15 INFO: l_thigh: FZ = -138.9096
+12:11:15 INFO: l_calf: FZ = -42.47730000000001
+12:11:15 INFO: l_foot: FZ = -13.4397
+12:11:15 INFO: r_thigh: FZ = -138.9096
+12:11:15 INFO: r_calf: FZ = -42.47730000000001
+12:11:15 INFO: r_foot: FZ = -13.4397
+12:11:15 INFO: l_hand: FZ = -5.9841
+12:11:15 INFO: 
 Supports:
-11:57:45 INFO: l_wrist
-11:57:45 INFO: r_elbow
-11:57:45 INFO: l_knee
-11:57:45 INFO: r_knee
-11:57:45 INFO: 
+12:11:15 INFO: l_wrist
+12:11:15 INFO: r_elbow
+12:11:15 INFO: l_knee
+12:11:15 INFO: r_knee
+12:11:15 INFO: 
 Performing linear analysis
-11:57:46 INFO: Nodal displacements (meters):
-11:57:46 INFO: l_shoulder: DX=-6.52  DY=13.21  DZ=-4.63
-11:57:46 INFO: l_elbow: DX=-8.19  DY=3.35  DZ=1.31
-11:57:46 INFO: l_finger: DX=13.41  DY=1.25  DZ=-0.22
-11:57:46 INFO: r_shoulder: DX=-5.28  DY=6.22  DZ=-2.37
-11:57:46 INFO: r_wrist: DX=8.80  DY=15.34  DZ=-1.95
-11:57:46 INFO: r_finger: DX=17.67  DY=22.78  DZ=-4.23
-11:57:46 INFO: neck_base: DX=-6.57  DY=11.53  DZ=-7.80
-11:57:46 INFO: head_base: DX=-4.91  DY=11.68  DZ=-5.07
-11:57:46 INFO: head_top: DX=-0.16  DY=11.91  DZ=-4.23
-11:57:46 INFO: spine_base: DX=-4.96  DY=11.64  DZ=-6.51
-11:57:46 INFO: r_hip: DX=-5.02  DY=11.80  DZ=-6.84
-11:57:46 INFO: l_hip: DX=-4.76  DY=11.52  DZ=-4.70
-11:57:46 INFO: l_heel: DX=8.45  DY=2.58  DZ=-4.25
-11:57:46 INFO: l_toe: DX=13.33  DY=8.51  DZ=-9.29
-11:57:46 INFO: r_heel: DX=-10.34  DY=1.55  DZ=-8.49
-11:57:46 INFO: r_toe: DX=-17.67  DY=2.50  DZ=-17.69
-11:57:46 INFO: 
+12:11:15 INFO: Nodal displacements (meters):
+12:11:15 INFO: l_shoulder: DX=-6.52  DY=13.21  DZ=-4.63
+12:11:15 INFO: l_elbow: DX=-8.19  DY=3.35  DZ=1.31
+12:11:15 INFO: l_finger: DX=13.41  DY=1.25  DZ=-0.22
+12:11:15 INFO: r_shoulder: DX=-5.28  DY=6.22  DZ=-2.37
+12:11:15 INFO: r_wrist: DX=8.80  DY=15.34  DZ=-1.95
+12:11:15 INFO: r_finger: DX=17.67  DY=22.78  DZ=-4.23
+12:11:15 INFO: neck_base: DX=-6.57  DY=11.53  DZ=-7.80
+12:11:15 INFO: head_base: DX=-4.91  DY=11.68  DZ=-5.07
+12:11:15 INFO: head_top: DX=-0.16  DY=11.91  DZ=-4.23
+12:11:15 INFO: spine_base: DX=-4.96  DY=11.64  DZ=-6.51
+12:11:15 INFO: r_hip: DX=-5.02  DY=11.80  DZ=-6.84
+12:11:15 INFO: l_hip: DX=-4.76  DY=11.52  DZ=-4.70
+12:11:15 INFO: l_heel: DX=8.45  DY=2.58  DZ=-4.25
+12:11:15 INFO: l_toe: DX=13.33  DY=8.51  DZ=-9.29
+12:11:15 INFO: r_heel: DX=-10.34  DY=1.55  DZ=-8.49
+12:11:15 INFO: r_toe: DX=-17.67  DY=2.50  DZ=-17.69
+12:11:15 INFO: 
 Reaction forces (Newtons):
-11:57:46 INFO: l_wrist: RxnFX=28.11  RxnFY=-19.51  RxnFZ=185.05
-11:57:46 INFO: r_elbow: RxnFX=-29.66  RxnFY=-40.78  RxnFZ=194.53
-11:57:46 INFO: l_knee: RxnFX=16.93  RxnFY=57.81  RxnFZ=370.10
-11:57:46 INFO: r_knee: RxnFX=-15.38  RxnFY=2.47  RxnFZ=231.31
-11:57:46 INFO: Weight exerted on support nodes (kg):
-11:57:46 INFO: l_wrist: -18.00
-11:57:46 INFO: r_elbow: -19.00
-11:57:46 INFO: l_knee: -37.00
-11:57:46 INFO: r_knee: -23.00
-11:58:36 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
+12:11:15 INFO: l_wrist: RxnFX=28.11  RxnFY=-19.51  RxnFZ=185.05
+12:11:15 INFO: r_elbow: RxnFX=-29.66  RxnFY=-40.78  RxnFZ=194.53
+12:11:15 INFO: l_knee: RxnFX=16.93  RxnFY=57.81  RxnFZ=370.10
+12:11:15 INFO: r_knee: RxnFX=-15.38  RxnFY=2.47  RxnFZ=231.31
+12:11:15 INFO: Weight exerted on support nodes (kg):
+12:11:15 INFO: l_wrist: -18.00
+12:11:15 INFO: r_elbow: -19.00
+12:11:15 INFO: l_knee: -37.00
+12:11:15 INFO: r_knee: -23.00

@@ -152,9 +152,9 @@ model.add_section("S", A=0.001681, Iy=2.353e-7, Iz=2.353e-7, J=4.496e-7)
 # Approximate values for steel beams:
 # E = 200000 MPa (SkyCiv) (1Pa = 1N/m^2)
 # G = 79300 MPa (https://www.engineeringtoolbox.com/modulus-rigidity-d_946.html)
+#  Optional in SkyCiv but required in PyNite
 # nu = 0.27 (SkyCiv)
 # rho = 7850 kg/m^3 (SkyCiv)
-# G is optional in SkyCiv?
 model.add_material(
     "Steel",
     E=200000,  # Young's modulus
