@@ -94,3 +94,17 @@ Reaction forces (Newtons):
 12:11:15 INFO: r_elbow: -19.00
 12:11:15 INFO: l_knee: -37.00
 12:11:15 INFO: r_knee: -23.00
+12:12:07 DEBUG: Starting new HTTPS connection (1): sentry.poliigon.com:443
+12:12:07 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
+16:51:39 DEBUG: Starting new HTTPS connection (1): software.poliigon.com:443
+16:51:40 DEBUG: https://software.poliigon.com:443 "GET /poliigon-addon-blender-versions.json HTTP/1.1" 200 17344
+16:56:01 DEBUG: Starting new HTTPS connection (1): software.poliigon.com:443
+16:56:02 DEBUG: https://software.poliigon.com:443 "GET /poliigon-addon-blender-versions.json HTTP/1.1" 200 17344
+17:09:12 DEBUG: Starting new HTTPS connection (1): software.poliigon.com:443
+17:09:13 DEBUG: https://software.poliigon.com:443 "GET /poliigon-addon-blender-versions.json HTTP/1.1" 200 17344
+17:09:19 DEBUG: Starting new HTTPS connection (1): software.poliigon.com:443
+17:09:19 DEBUG: https://software.poliigon.com:443 "GET /poliigon-addon-blender-versions.json HTTP/1.1" 200 17344
+17:09:14 DEBUG: Starting new HTTPS connection (1): software.poliigon.com:443
+17:09:14 DEBUG: https://software.poliigon.com:443 "GET /poliigon-addon-blender-versions.json HTTP/1.1" 200 17344
+08:58:52 DEBUG: Starting new HTTPS connection (1): sentry.poliigon.com:443
+08:58:53 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
