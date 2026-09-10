@@ -94,3 +94,5 @@ Reaction forces (Newtons):
 17:13:17 INFO: r_elbow: -19.00
 17:13:17 INFO: l_knee: -22.00
 17:13:17 INFO: r_knee: -38.00
+17:14:12 DEBUG: Starting new HTTPS connection (1): sentry.poliigon.com:443
+17:14:13 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
