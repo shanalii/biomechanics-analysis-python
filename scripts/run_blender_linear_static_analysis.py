@@ -2,9 +2,7 @@
 import os
 import sys
 
-# This script lives in scripts/, one level below the repo root - add the repo
-# root to sys.path so the biomechanics package is importable.
-REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, REPO_ROOT)
 
 # Make Blender use venv
