@@ -2,9 +2,12 @@
 
 Model for: 2026.07.16_Basic Stick Figure Posed.blend
 
-This is the single source of truth for the specific stick figure being
-analyzed: which mesh vertices are joints/supports, which edges are limb
-segments, and the mass-distribution data used to compute point loads.
+This is the single source of truth for THIS analysis: which joints are
+supported, which joints each limb connects, and the mass-distribution data
+used to compute point loads. Joint/limb identity is resolved against the
+Blender mesh by name, via biomechanics.body_graph.BodyGraphResolver, which
+infers names purely from mesh topology and geometry - independent of this
+file and of Blender's vertex/edge creation order.
 """
 
 from dataclasses import dataclass
@@ -16,7 +19,7 @@ G = 9.81  # m/s^2
 
 @dataclass(frozen=True)
 class BodyNode:
-    """A body joint/connection, mapped 1:1 by index to a Blender mesh vertex."""
+    """A body joint, identified by name (see body_graph.BodyGraphResolver)."""
 
     name: str
     is_supported: bool
@@ -24,7 +27,7 @@ class BodyNode:
 
 @dataclass(frozen=True)
 class BodyMember:
-    """A body segment (limb), mapped 1:1 by index to a Blender mesh edge.
+    """A body segment (limb) connecting two named joints.
 
     i_node/j_node: names of the two nodes this member connects. Matches Pynite's
         i-node/j-node convention - the member's local x-axis runs from
@@ -43,16 +46,7 @@ class BodyMember:
     cm_percent: float
 
 
-# TODO2: global ordering of nodes/members to set loads; for now, hard-code based on order created
-# Coordinate-based (eg. by height or left/right) has many edge cases based on figure position
-# Construct graph data structure, identify limbs based on leaves/nodes with 1 member
-# Head is limb (leaf node in graph) as well - we can identify arms vs legs
-# based on coordinates down the spine from head
-# Symmetry across spine: doesn't really matter R/L, but we can assume R/L
-# arms/legs are on either side
-
 # Input nodes representing each body joint/connection
-# Order is specific to this model - manually listed from Blender coordinates
 BODY_NODES = [
     BodyNode("l_shoulder", is_supported=False),
     BodyNode("l_elbow", is_supported=False),
