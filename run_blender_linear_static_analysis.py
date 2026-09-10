@@ -28,11 +28,13 @@ from biomechanics.visualizer import ComVisualizer  # pylint: disable=wrong-impor
 
 ### LOGGING SETUP ###
 
-# Log to output.txt in the current directory
+# Log to output/output.txt in the repo root
 # Need to go up 1 level since current directory is the Blender file we're
 # running code in
 script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-log_path = os.path.join(script_dir, "output.txt")
+output_dir = os.path.join(script_dir, "output")
+os.makedirs(output_dir, exist_ok=True)
+log_path = os.path.join(output_dir, "output.txt")
 logger = configure_logging(log_path)
 
 
