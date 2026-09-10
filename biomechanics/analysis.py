@@ -14,7 +14,7 @@ from biomechanics.results import (
 )
 
 
-class LinearStaticAnalysis:
+class AnalysisRunner:
     """Runs a linear static analysis on a constructed FEModel3D."""
 
     def __init__(

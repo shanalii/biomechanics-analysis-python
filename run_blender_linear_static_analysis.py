@@ -8,7 +8,7 @@ sys.path.insert(0, "/Users/sl/blender-env-3-13/lib/python3.13/site-packages")
 # Ignore lint errors for imports from Blender's internal module
 import bpy  # type: ignore  # pylint: disable=wrong-import-position
 
-from biomechanics.analysis import LinearStaticAnalysis  # pylint: disable=wrong-import-position
+from biomechanics.analysis import AnalysisRunner  # pylint: disable=wrong-import-position
 from biomechanics.body_data import (  # pylint: disable=wrong-import-position
     BODY_MASS_KG,
     BODY_MEMBERS,
@@ -16,10 +16,10 @@ from biomechanics.body_data import (  # pylint: disable=wrong-import-position
     G,
 )
 from biomechanics.logging_setup import configure_logging  # pylint: disable=wrong-import-position
-from biomechanics.mesh_reader import BlenderMeshReader  # pylint: disable=wrong-import-position
-from biomechanics.model_builder import StickFigureModelBuilder  # pylint: disable=wrong-import-position
+from biomechanics.mesh_reader import MeshReader  # pylint: disable=wrong-import-position
+from biomechanics.model_builder import ModelBuilder  # pylint: disable=wrong-import-position
 from biomechanics.results import log_model_summary  # pylint: disable=wrong-import-position
-from biomechanics.visualizer import BlenderComVisualizer  # pylint: disable=wrong-import-position
+from biomechanics.visualizer import ComVisualizer  # pylint: disable=wrong-import-position
 
 # How to run:
 # in terminal, ~
@@ -38,11 +38,9 @@ logger = configure_logging(log_path)
 
 ### BUILD PYNITE 3D MODEL FROM BLENDER MESH ###
 
-mesh_data = BlenderMeshReader(bpy.context.object).read()
+mesh_data = MeshReader(bpy.context.object).read()
 
-builder = StickFigureModelBuilder(
-    mesh_data, BODY_NODES, BODY_MEMBERS, BODY_MASS_KG, G, logger
-)
+builder = ModelBuilder(mesh_data, BODY_NODES, BODY_MEMBERS, BODY_MASS_KG, G)
 model = builder.build()
 logger.info("3D model constructed.")
 log_model_summary(model, logger)
@@ -51,14 +49,14 @@ log_model_summary(model, logger)
 ### VISUALIZE MEMBER CENTER-OF-MASS POINTS IN BLENDER ###
 
 com_points = [
-    StickFigureModelBuilder.member_com_point(model.members[member.name], member.cm_percent)
+    ModelBuilder.member_com_point(model.members[member.name], member.cm_percent)
     for member in BODY_MEMBERS
     if member.mass_percent > 0
 ]
-BlenderComVisualizer().draw_com_markers(com_points)
+ComVisualizer().draw_com_markers(com_points)
 
 
 ### RUN LINEAR ANALYSIS VIA PYNITE ###
 
-results = LinearStaticAnalysis(model, G, logger=logger).run()
+results = AnalysisRunner(model, G, logger=logger).run()
 results.log_summary(logger)

@@ -24,7 +24,7 @@ class MeshData:
     edge_indices: list  # list[tuple[int, int]] - (i_vert_index, j_vert_index)
 
 
-class BlenderMeshReader:
+class MeshReader:
     """Reads the active Blender mesh into plain-Python MeshData."""
 
     def __init__(self, blender_object=None):

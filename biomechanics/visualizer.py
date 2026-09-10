@@ -8,7 +8,7 @@ from typing import Iterable
 import bpy  # type: ignore  # pylint: disable=wrong-import-position
 
 
-class BlenderComVisualizer:
+class ComVisualizer:
     """Draws small cones in Blender to mark member center-of-mass points."""
 
     def __init__(self, cone_vertices: int = 8, cone_radius: float = 0.03, cone_depth: float = 0.05):

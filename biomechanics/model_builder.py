@@ -1,7 +1,5 @@
 """Builds a Pynite FEModel3D from mesh geometry + anatomical body config."""
 
-import logging
-
 from Pynite import FEModel3D  # pylint: disable=wrong-import-position
 
 from biomechanics.body_data import BodyMember, BodyNode
@@ -31,7 +29,7 @@ STEEL_SECTION = dict(A=0.001681, Iy=2.353e-7, Iz=2.353e-7, J=4.496e-7)
 STEEL_MATERIAL = dict(E=200000, G=29000, nu=0.27, rho=7850)
 
 
-class StickFigureModelBuilder:
+class ModelBuilder:
     """Builds a Pynite FEModel3D representing a stick figure and its loads."""
 
     def __init__(
