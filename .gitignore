@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+blenderenv.venv/
+.venv/
+
+# Blender
+*.blend1
+*.blend2
+
+# OS / editor
+.DS_Store
+.vscode/
