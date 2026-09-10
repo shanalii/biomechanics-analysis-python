@@ -18,6 +18,7 @@ from biomechanics.body_data import (  # pylint: disable=wrong-import-position
     BODY_NODES,
     G,
 )
+from biomechanics.body_graph import BodyGraphResolver  # pylint: disable=wrong-import-position
 from biomechanics.logging_setup import (  # pylint: disable=wrong-import-position
     configure_logging,
     prune_old_logs,
@@ -46,8 +47,9 @@ logger = configure_logging(log_path)
 ### BUILD PYNITE 3D MODEL FROM BLENDER MESH ###
 
 mesh_data = MeshReader(bpy.context.object).read()
+names_by_index = BodyGraphResolver().resolve(mesh_data)
 
-builder = ModelBuilder(mesh_data, BODY_NODES, BODY_MEMBERS, BODY_MASS_KG, G)
+builder = ModelBuilder(mesh_data, names_by_index, BODY_NODES, BODY_MEMBERS, BODY_MASS_KG, G)
 model = builder.build()
 logger.info("3D model constructed.")
 log_model_summary(model, logger)
