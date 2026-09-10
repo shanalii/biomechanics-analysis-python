@@ -2,6 +2,11 @@
 import os
 import sys
 
+# This script lives in scripts/, one level below the repo root - add the repo
+# root to sys.path so the biomechanics package is importable.
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, REPO_ROOT)
+
 # Make Blender use venv
 sys.path.insert(0, "/Users/sl/blender-env-3-13/lib/python3.13/site-packages")
 
@@ -24,15 +29,12 @@ from biomechanics.visualizer import ComVisualizer  # pylint: disable=wrong-impor
 # How to run:
 # in terminal, ~
 # source blender-env-3-13/bin/activate
-# blender (opens app, select blender file)
+# blender (opens app, select blender file, open scripts/run_blender_linear_static_analysis.py)
 
 ### LOGGING SETUP ###
 
 # Log to output/output.txt in the repo root
-# Need to go up 1 level since current directory is the Blender file we're
-# running code in
-script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-output_dir = os.path.join(script_dir, "output")
+output_dir = os.path.join(REPO_ROOT, "output")
 os.makedirs(output_dir, exist_ok=True)
 log_path = os.path.join(output_dir, "output.txt")
 logger = configure_logging(log_path)
