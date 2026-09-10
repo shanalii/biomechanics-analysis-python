@@ -18,7 +18,11 @@ from biomechanics.body_data import (  # pylint: disable=wrong-import-position
     BODY_NODES,
     G,
 )
-from biomechanics.logging_setup import configure_logging  # pylint: disable=wrong-import-position
+from biomechanics.logging_setup import (  # pylint: disable=wrong-import-position
+    configure_logging,
+    prune_old_logs,
+    timestamped_log_path,
+)
 from biomechanics.mesh_reader import MeshReader  # pylint: disable=wrong-import-position
 from biomechanics.model_builder import ModelBuilder  # pylint: disable=wrong-import-position
 from biomechanics.results import log_model_summary  # pylint: disable=wrong-import-position
@@ -31,10 +35,11 @@ from biomechanics.visualizer import ComVisualizer  # pylint: disable=wrong-impor
 
 ### LOGGING SETUP ###
 
-# Log to output/output.txt in the repo root
+# Log to a timestamped file in output/, keeping at most the last 10 runs
 output_dir = os.path.join(REPO_ROOT, "output")
 os.makedirs(output_dir, exist_ok=True)
-log_path = os.path.join(output_dir, "output.txt")
+prune_old_logs(output_dir)
+log_path = timestamped_log_path(output_dir)
 logger = configure_logging(log_path)
 
 
