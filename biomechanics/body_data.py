@@ -10,7 +10,7 @@ segments, and the mass-distribution data used to compute point loads.
 from dataclasses import dataclass
 
 # Input: total body mass (kg)
-BODY_MASS_KG = 100
+BODY_MASS_KG = 112.7 #104.78
 G = 9.81  # m/s^2
 
 
@@ -74,10 +74,11 @@ BODY_NODES = [
     BodyNode("l_toe", is_supported=False),
     BodyNode("r_heel", is_supported=False),
     BodyNode("r_toe", is_supported=False),
+    BodyNode("tail", is_supported=False),
 ]
 
 # Members connecting bodily nodes
-# Flipped values (100 - cm_percent) for members with reversed x-axis
+# Flipped values (100 - cm_percent) for members with reversed node connection order
 # Ordering of member nodes determined by order of creation
 # However, cm_percent was calculated from the "proximal end"
 # i_node and j_node refer to names of the two nodes that the member joins

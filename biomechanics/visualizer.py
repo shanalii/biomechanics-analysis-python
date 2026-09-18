@@ -11,7 +11,7 @@ import bpy  # type: ignore  # pylint: disable=wrong-import-position
 class ComVisualizer:
     """Draws small cones in Blender to mark member center-of-mass points."""
 
-    def __init__(self, cone_vertices: int = 8, cone_radius: float = 0.03, cone_depth: float = 0.05):
+    def __init__(self, cone_vertices: int = 8, cone_radius: float = 0.001, cone_depth: float = 0.001):
         self._cone_vertices = cone_vertices
         self._cone_radius = cone_radius
         self._cone_depth = cone_depth
