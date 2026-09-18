@@ -53,19 +53,19 @@ BODY_NODES = [
     BodyNode("l_wrist", is_supported=True),
     BodyNode("l_finger", is_supported=False),
     BodyNode("r_shoulder", is_supported=False),
+    BodyNode("neck_base", is_supported=False),
     BodyNode("r_elbow", is_supported=True),
     BodyNode("r_wrist", is_supported=False),
     BodyNode("r_finger", is_supported=False),
-    BodyNode("neck_base", is_supported=False),
     BodyNode("head_base", is_supported=False),
     BodyNode("head_top", is_supported=False),
-    BodyNode("spine_base", is_supported=False),
-    BodyNode("r_hip", is_supported=False),
     BodyNode("l_hip", is_supported=False),
+    BodyNode("r_hip", is_supported=False),
+    BodyNode("spine_base", is_supported=False),
     BodyNode("l_knee", is_supported=True),
+    BodyNode("r_knee", is_supported=True),
     BodyNode("l_heel", is_supported=False),
     BodyNode("l_toe", is_supported=False),
-    BodyNode("r_knee", is_supported=True),
     BodyNode("r_heel", is_supported=False),
     BodyNode("r_toe", is_supported=False),
 ]
@@ -77,21 +77,21 @@ BODY_NODES = [
 BODY_MEMBERS = [
     BodyMember("l_upperarm", mass_percent=3.25443787, cm_percent=43.6),
     BodyMember("l_forearm", mass_percent=1.87058599, cm_percent=43),
+    BodyMember("l_hand", mass_percent=0.6489788128, cm_percent=46.8),
     BodyMember("l_back", mass_percent=0, cm_percent=0),
+    BodyMember("r_back", mass_percent=0, cm_percent=0),
     BodyMember("r_upperarm", mass_percent=3.25443787, cm_percent=56.4),  # Flip
     BodyMember("r_forearm", mass_percent=1.87058599, cm_percent=57),  # Flip
     BodyMember("r_hand", mass_percent=0.6489788128, cm_percent=46.8),
-    BodyMember("r_back", mass_percent=0, cm_percent=0),
     BodyMember("neck", mass_percent=0, cm_percent=0),
     BodyMember("head", mass_percent=8.25539225, cm_percent=55),
-    BodyMember("spine", mass_percent=46.83145638, cm_percent=54.04),  # Flip
     BodyMember("r_pelvis", mass_percent=0, cm_percent=0),
     BodyMember("l_pelvis", mass_percent=0, cm_percent=0),
+    BodyMember("spine", mass_percent=46.83145638, cm_percent=54.04),  # Flip
     BodyMember("l_thigh", mass_percent=10.49818668, cm_percent=43.3),
+    BodyMember("r_thigh", mass_percent=10.49818668, cm_percent=56.7),  # Flip
     BodyMember("l_calf", mass_percent=4.752815423, cm_percent=43.4),
     BodyMember("l_foot", mass_percent=1.43157091, cm_percent=50),
-    BodyMember("r_thigh", mass_percent=10.49818668, cm_percent=56.7),  # Flip
     BodyMember("r_calf", mass_percent=4.752815423, cm_percent=56.6),  # Flip
     BodyMember("r_foot", mass_percent=1.43157091, cm_percent=50),  # Flip
-    BodyMember("l_hand", mass_percent=0.6489788128, cm_percent=46.8),
 ]
