@@ -10,7 +10,7 @@ segments, and the mass-distribution data used to compute point loads.
 from dataclasses import dataclass
 
 # Input: total body mass (kg)
-BODY_MASS_KG = 100
+BODY_MASS_KG = 112.7 #104.78
 G = 9.81  # m/s^2
 
 
@@ -68,30 +68,32 @@ BODY_NODES = [
     BodyNode("l_toe", is_supported=False),
     BodyNode("r_heel", is_supported=False),
     BodyNode("r_toe", is_supported=False),
+    BodyNode("tail", is_supported=False),
 ]
 
 # Members connecting bodily nodes
-# Flipped values (100 - cm_percent) for members with reversed x-axis
+# Flipped values (100 - cm_percent) for members with reversed node connection order
 # Ordering of member nodes determined by order of creation
-# However, cm_percent was calculated from the "proximal end"
+# However, cm_percent was calculated from the "proximal end" (outside -> body center)
 BODY_MEMBERS = [
-    BodyMember("l_upperarm", mass_percent=3.25443787, cm_percent=43.6),
+    BodyMember("l_upperarm", mass_percent=3.25443787, cm_percent=56.4), # Flip
     BodyMember("l_forearm", mass_percent=1.87058599, cm_percent=43),
     BodyMember("l_hand", mass_percent=0.6489788128, cm_percent=46.8),
     BodyMember("l_back", mass_percent=0, cm_percent=0),
     BodyMember("r_back", mass_percent=0, cm_percent=0),
-    BodyMember("r_upperarm", mass_percent=3.25443787, cm_percent=56.4),  # Flip
-    BodyMember("r_forearm", mass_percent=1.87058599, cm_percent=57),  # Flip
-    BodyMember("r_hand", mass_percent=0.6489788128, cm_percent=46.8),
+    BodyMember("r_upperarm", mass_percent=3.25443787, cm_percent=43.6), # Flip
+    BodyMember("r_forearm", mass_percent=1.87058599, cm_percent=43), # Flip
+    BodyMember("r_hand", mass_percent=0.6489788128, cm_percent=53.2), # Flip
     BodyMember("neck", mass_percent=0, cm_percent=0),
     BodyMember("head", mass_percent=8.25539225, cm_percent=55),
     BodyMember("r_pelvis", mass_percent=0, cm_percent=0),
     BodyMember("l_pelvis", mass_percent=0, cm_percent=0),
-    BodyMember("spine", mass_percent=46.83145638, cm_percent=54.04),  # Flip
-    BodyMember("l_thigh", mass_percent=10.49818668, cm_percent=43.3),
-    BodyMember("r_thigh", mass_percent=10.49818668, cm_percent=56.7),  # Flip
-    BodyMember("l_calf", mass_percent=4.752815423, cm_percent=43.4),
-    BodyMember("l_foot", mass_percent=1.43157091, cm_percent=50),
-    BodyMember("r_calf", mass_percent=4.752815423, cm_percent=56.6),  # Flip
-    BodyMember("r_foot", mass_percent=1.43157091, cm_percent=50),  # Flip
+    BodyMember("spine", mass_percent=46.83145638, cm_percent=54.04), #54.04
+    BodyMember("l_thigh", mass_percent=10.49818668, cm_percent=56.7), # Flip
+    BodyMember("r_thigh", mass_percent=10.49818668, cm_percent=43.3),
+    BodyMember("l_calf", mass_percent=4.752815423, cm_percent=56.6), # Flip
+    BodyMember("l_foot", mass_percent=1.43157091, cm_percent=50), # Flip
+    BodyMember("r_calf", mass_percent=4.752815423, cm_percent=43.4),
+    BodyMember("r_foot", mass_percent=1.43157091, cm_percent=50),
+    BodyMember("tailbone", mass_percent=13.65718649, cm_percent=5),
 ]
