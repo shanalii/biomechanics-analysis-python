@@ -1,0 +1,97 @@
+22:45:35 INFO: 3D model constructed.
+22:45:35 INFO: 
+Nodes: 20
+22:45:35 INFO: l_shoulder: (0.00, 0.00, 0.00)
+22:45:35 INFO: l_elbow: (-0.01, -0.11, -0.19)
+22:45:35 INFO: l_wrist: (-0.01, -0.01, -0.42)
+22:45:35 INFO: l_finger: (-0.03, 0.19, -0.44)
+22:45:35 INFO: r_shoulder: (0.36, 0.05, -0.03)
+22:45:35 INFO: r_elbow: (0.18, 0.03, -0.02)
+22:45:35 INFO: r_wrist: (0.45, 0.07, -0.23)
+22:45:35 INFO: r_finger: (0.22, 0.19, -0.27)
+22:45:35 INFO: neck_base: (0.10, 0.31, -0.36)
+22:45:35 INFO: head_base: (0.17, 0.12, -0.01)
+22:45:35 INFO: head_top: (0.15, 0.38, 0.02)
+22:45:35 INFO: spine_base: (0.17, -0.54, -0.13)
+22:45:35 INFO: r_hip: (0.38, -0.51, -0.15)
+22:45:35 INFO: l_hip: (0.28, -0.53, -0.14)
+22:45:35 INFO: l_knee: (0.20, -0.63, -0.46)
+22:45:35 INFO: l_heel: (0.62, -0.54, -0.38)
+22:45:35 INFO: l_toe: (0.37, -0.84, -0.27)
+22:45:35 INFO: r_knee: (0.43, -1.01, -0.42)
+22:45:35 INFO: r_heel: (0.55, -0.88, -0.36)
+22:45:35 INFO: r_toe: (0.57, -1.11, -0.40)
+22:45:35 INFO: 
+Members: 19
+22:45:35 INFO: l_upperarm: l_shoulder -> l_elbow
+22:45:35 INFO: l_forearm: l_elbow -> l_wrist
+22:45:35 INFO: l_back: l_wrist -> l_finger
+22:45:35 INFO: r_upperarm: r_elbow -> l_shoulder
+22:45:35 INFO: r_forearm: r_shoulder -> r_elbow
+22:45:35 INFO: r_hand: r_wrist -> r_shoulder
+22:45:35 INFO: r_back: r_finger -> r_wrist
+22:45:35 INFO: neck: neck_base -> r_finger
+22:45:35 INFO: head: r_elbow -> head_base
+22:45:35 INFO: spine: head_base -> head_top
+22:45:35 INFO: r_pelvis: l_hip -> r_hip
+22:45:35 INFO: l_pelvis: spine_base -> l_hip
+22:45:35 INFO: l_thigh: r_elbow -> l_hip
+22:45:35 INFO: l_calf: l_knee -> spine_base
+22:45:35 INFO: l_foot: r_hip -> l_heel
+22:45:35 INFO: r_thigh: l_toe -> l_knee
+22:45:35 INFO: r_calf: r_knee -> l_toe
+22:45:35 INFO: r_foot: l_heel -> r_heel
+22:45:35 INFO: l_hand: r_heel -> r_toe
+22:45:35 INFO: 
+Member point loads:
+22:45:35 INFO: l_upperarm: FZ = -31.9260355047
+22:45:35 INFO: l_forearm: FZ = -18.3504485619
+22:45:35 INFO: r_upperarm: FZ = -31.9260355047
+22:45:35 INFO: r_forearm: FZ = -18.3504485619
+22:45:35 INFO: r_hand: FZ = -6.3664821535680005
+22:45:35 INFO: head: FZ = -80.9853979725
+22:45:35 INFO: spine: FZ = -459.4165870878
+22:45:35 INFO: l_thigh: FZ = -102.9872113308
+22:45:35 INFO: l_calf: FZ = -46.62511929963001
+22:45:35 INFO: l_foot: FZ = -14.0437106271
+22:45:35 INFO: r_thigh: FZ = -102.9872113308
+22:45:35 INFO: r_calf: FZ = -46.62511929963001
+22:45:35 INFO: r_foot: FZ = -14.0437106271
+22:45:35 INFO: l_hand: FZ = -6.3664821535680005
+22:45:35 INFO: 
+Supports:
+22:45:35 INFO: l_wrist
+22:45:35 INFO: r_elbow
+22:45:35 INFO: l_knee
+22:45:35 INFO: r_knee
+22:45:35 INFO: 
+Performing linear analysis
+22:45:36 INFO: Nodal displacements (meters):
+22:45:36 INFO: l_shoulder: DX=0.47  DY=-3.15  DZ=-0.06
+22:45:36 INFO: l_elbow: DX=1.84  DY=-1.89  DZ=-0.82
+22:45:36 INFO: l_finger: DX=-3.39  DY=-0.29  DZ=-0.00
+22:45:36 INFO: r_shoulder: DX=-0.59  DY=3.54  DZ=-0.56
+22:45:36 INFO: r_wrist: DX=-1.82  DY=5.40  DZ=-1.06
+22:45:36 INFO: r_finger: DX=-4.56  DY=0.75  DZ=0.03
+22:45:36 INFO: neck_base: DX=-7.42  DY=-1.78  DZ=0.59
+22:45:36 INFO: head_base: DX=-1.83  DY=-0.02  DZ=-8.41
+22:45:36 INFO: head_top: DX=-7.28  DY=9.15  DZ=-73.55
+22:45:36 INFO: spine_base: DX=12.92  DY=0.11  DZ=0.96
+22:45:36 INFO: r_hip: DX=9.33  DY=8.75  DZ=-23.68
+22:45:36 INFO: l_hip: DX=11.22  DY=4.37  DZ=-10.46
+22:45:36 INFO: l_heel: DX=-24.84  DY=35.64  DZ=-61.70
+22:45:36 INFO: l_toe: DX=1.48  DY=0.86  DZ=-0.49
+22:45:36 INFO: r_heel: DX=-26.19  DY=33.63  DZ=-104.86
+22:45:36 INFO: r_toe: DX=-34.09  DY=39.13  DZ=-145.16
+22:45:36 INFO: 
+Reaction forces (Newtons):
+22:45:36 INFO: l_wrist: RxnFX=-0.31  RxnFY=9.29  RxnFZ=60.16
+22:45:36 INFO: r_elbow: RxnFX=-0.83  RxnFY=-33.93  RxnFZ=654.10
+22:45:36 INFO: l_knee: RxnFX=15.92  RxnFY=-2.14  RxnFZ=213.98
+22:45:36 INFO: r_knee: RxnFX=-14.78  RxnFY=26.77  RxnFZ=52.76
+22:45:36 INFO: Weight exerted on support nodes (kg):
+22:45:36 INFO: l_wrist: -6.00
+22:45:36 INFO: r_elbow: -66.00
+22:45:36 INFO: l_knee: -21.00
+22:45:36 INFO: r_knee: -5.00
+22:46:18 DEBUG: Starting new HTTPS connection (1): software.poliigon.com:443
