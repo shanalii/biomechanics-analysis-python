@@ -5,28 +5,24 @@ from Pynite import FEModel3D  # pylint: disable=wrong-import-position
 from biomechanics.body_data import BodyMember, BodyNode
 from biomechanics.mesh_reader import MeshData
 
-# Section based on steel material characteristics
-# A: cross-sectional area (pi*r^2)
-#   (SkyCiv: 1681 mm^2 = 0.001681 m^2)
-# Iy: second moment of area (m. o. inertia) about the weak axis (pi*r^4/4)
-#   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
-# Iz: second moment of area (m. o. inertia) about the strong axis (pi*r^4/4)
-#   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
-# J: torsion constant (pi*r^4/2); calculated assuming circular cross-section
-#   First calculate radius of circle with given A (r = 0.02313 m)
-#   (https://www.omnicalculator.com/physics/torsional-constant: 4.496e-7 m^4)
-# (Source: https://skyciv.com/free-moment-of-inertia-calculator/,
-# http://www.hyperphysics.phy-astr.gsu.edu/hbase/icyl.html)
-STEEL_SECTION = dict(A=0.001681, Iy=2.353e-7, Iz=2.353e-7, J=4.496e-7)
+# Section properties pulled directly from SkyCiv's "Default Section" (Section ID 1),
+# which is what the SkyCiv model actually solves with (all members use this section).
+# Source values in mm^2 / mm^4, converted to m^2 / m^4.
+STEEL_SECTION = dict(
+    A=0.0016805189677511114,
+    Iy=2.3534533341427174e-7,
+    Iz=2.3534533341427174e-7,
+    J=3.9714525013658364e-7,
+)
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
 # Approximate values for steel beams:
 # E = 200000 MPa (SkyCiv) (1Pa = 1N/m^2)
-# G = 79300 MPa (https://www.engineeringtoolbox.com/modulus-rigidity-d_946.html)
-#  Optional in SkyCiv but required in PyNite
+# G derived the way structural software typically does: G = E / (2*(1+nu)),
+# rather than an independently-specified value.
 # nu = 0.27 (SkyCiv)
 # rho = 7850 kg/m^3 (SkyCiv)
-STEEL_MATERIAL = dict(E=200000, G=29000, nu=0.27, rho=7850)
+STEEL_MATERIAL = dict(E=200000, G=200000 / (2 * (1 + 0.27)), nu=0.27, rho=7850)
 
 
 class ModelBuilder:
@@ -68,7 +64,10 @@ class ModelBuilder:
             model.add_node(body_node.name, x, y, z)
 
             # Add support for nodes that make contact
-            # Pinned supports - only release rotationally in local Z axis
+            # Pinned supports - only release rotation about the model's Y axis.
+            # SkyCiv's restraint code (FFFFFR) releases rotation about SkyCiv's Z axis,
+            # which corresponds to this model's Y axis (SkyCiv is Y-up, this model is
+            # Z-up: SkyCiv Y <-> our Z, SkyCiv Z <-> our Y).
             if body_node.is_supported:
                 model.def_support(
                     body_node.name,
@@ -76,8 +75,8 @@ class ModelBuilder:
                     support_DY=True,
                     support_DZ=True,
                     support_RX=True,
-                    support_RY=True,
-                    support_RZ=False,
+                    support_RY=False,
+                    support_RZ=True,
                 )
 
     def _add_members(self, model: FEModel3D) -> None:

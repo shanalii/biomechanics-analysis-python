@@ -1,0 +1,29 @@
+15:36:58 INFO: 3D model constructed.
+15:36:58 INFO: 
+Nodes: 2
+15:36:58 INFO: l_shoulder: (0.027486, -0.188033, 0.456008)
+15:36:58 INFO: neck_base: (0.016693, -0.293222, 0.267478)
+15:36:58 INFO: 
+Members: 1
+15:36:58 INFO: l_back: l_shoulder -> neck_base
+15:36:58 INFO: 
+Member point loads:
+15:36:58 INFO: l_back: FZ = -9.999999900015801
+15:36:58 INFO: 
+Supports:
+15:36:58 INFO: l_shoulder
+15:36:58 INFO: neck_base
+15:36:58 INFO: 
+Performing linear analysis
+15:36:59 INFO: Nodal displacements (meters):
+15:36:59 INFO: 
+Reaction forces (Newtons):
+15:36:59 INFO: l_shoulder: RxnFX=-0.000000  RxnFY=0.000000  RxnFZ=5.000000
+15:36:59 INFO: neck_base: RxnFX=-0.000000  RxnFY=0.000000  RxnFZ=5.000000
+15:36:59 INFO: Weight exerted on support nodes (kg):
+15:36:59 INFO: l_shoulder: -0.509684
+15:36:59 INFO: neck_base: -0.509684
+15:37:06 DEBUG: Starting new HTTPS connection (1): sentry.poliigon.com:443
+15:37:07 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
+16:06:42 DEBUG: Resetting dropped connection: sentry.poliigon.com
+16:06:42 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0

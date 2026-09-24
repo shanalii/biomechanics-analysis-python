@@ -10,7 +10,7 @@ segments, and the mass-distribution data used to compute point loads.
 from dataclasses import dataclass
 
 # Input: total body mass (kg)
-BODY_MASS_KG = 112.7 #104.78
+BODY_MASS_KG = 112.7
 G = 9.81  # m/s^2
 
 
@@ -88,7 +88,7 @@ BODY_MEMBERS = [
     BodyMember("head", mass_percent=8.25539225, cm_percent=55),
     BodyMember("r_pelvis", mass_percent=0, cm_percent=0),
     BodyMember("l_pelvis", mass_percent=0, cm_percent=0),
-    BodyMember("spine", mass_percent=46.83145638, cm_percent=54.04), #54.04
+    BodyMember("spine", mass_percent=33.1742699, cm_percent=54.04), #54.04
     BodyMember("l_thigh", mass_percent=10.49818668, cm_percent=56.7), # Flip
     BodyMember("r_thigh", mass_percent=10.49818668, cm_percent=43.3),
     BodyMember("l_calf", mass_percent=4.752815423, cm_percent=56.6), # Flip
