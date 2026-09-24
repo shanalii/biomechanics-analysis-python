@@ -10,7 +10,7 @@ segments, and the mass-distribution data used to compute point loads.
 from dataclasses import dataclass
 
 # Input: total body mass (kg)
-BODY_MASS_KG = 112.7 #104.78
+BODY_MASS_KG = 112.7
 G = 9.81  # m/s^2
 
 

@@ -52,7 +52,7 @@ class AnalysisRunner:
 
                 # Calculate downwards weight (kg) on supported nodes
                 # Flip sign because reaction force is in +Z direction
-                weights_on_supports.append(SupportWeight(name, -int(rz / self._g)))
+                weights_on_supports.append(SupportWeight(name, -(rz / self._g)))
 
         return AnalysisResults(
             displacements=displacements,
