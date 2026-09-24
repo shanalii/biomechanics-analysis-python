@@ -40,22 +40,22 @@ class AnalysisResults:
     def log_summary(self, logger: logging.Logger) -> None:
         logger.info("Nodal displacements (meters):")
         for d in self.displacements:
-            logger.info("%s: DX=%.2f  DY=%.2f  DZ=%.2f", d.name, d.dx, d.dy, d.dz)
+            logger.info("%s: DX=%f  DY=%f  DZ=%f", d.name, d.dx, d.dy, d.dz)
 
         logger.info("\nReaction forces (Newtons):")
         for r in self.reactions:
-            logger.info("%s: RxnFX=%.2f  RxnFY=%.2f  RxnFZ=%.2f", r.name, r.rx, r.ry, r.rz)
+            logger.info("%s: RxnFX=%f  RxnFY=%f  RxnFZ=%f", r.name, r.rx, r.ry, r.rz)
 
         logger.info("Weight exerted on support nodes (kg):")
         for w in self.weights_on_supports:
-            logger.info("%s: %.2f", w.name, w.weight_kg)
+            logger.info("%s: %f", w.name, w.weight_kg)
 
 
 def log_model_summary(model: FEModel3D, logger: logging.Logger) -> None:
     """Logs nodes, members, point loads, and supports of a constructed model."""
     logger.info("\nNodes: %d", len(model.nodes))
     for name, node in model.nodes.items():
-        logger.info("%s: (%.2f, %.2f, %.2f)", name, node.X, node.Y, node.Z)
+        logger.info("%s: (%f, %f, %f)", name, node.X, node.Y, node.Z)
 
     logger.info("\nMembers: %d", len(model.members))
     for name, member in model.members.items():

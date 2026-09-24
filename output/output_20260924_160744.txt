@@ -1,0 +1,41 @@
+16:07:44 INFO: 3D model constructed.
+16:07:44 INFO: 
+Nodes: 6
+16:07:44 INFO: l_shoulder: (0.027486, -0.188033, 0.456008)
+16:07:44 INFO: l_elbow: (0.016693, -0.293222, 0.267478)
+16:07:44 INFO: r_shoulder: (0.382879, -0.133880, 0.423061)
+16:07:44 INFO: neck_base: (0.205182, -0.160956, 0.439534)
+16:07:44 INFO: head_base: (0.193321, -0.070193, 0.441931)
+16:07:44 INFO: head_top: (0.173432, 0.189575, 0.480267)
+16:07:44 INFO: 
+Members: 5
+16:07:44 INFO: l_upperarm: l_shoulder -> l_elbow
+16:07:44 INFO: l_back: neck_base -> l_shoulder
+16:07:44 INFO: r_back: r_shoulder -> neck_base
+16:07:44 INFO: neck: neck_base -> head_base
+16:07:44 INFO: head: head_base -> head_top
+16:07:44 INFO: 
+Member point loads:
+16:07:44 INFO: l_back: FZ = -9.999999900015801
+16:07:44 INFO: 
+Supports:
+16:07:44 INFO: l_elbow
+16:07:44 INFO: r_shoulder
+16:07:44 INFO: 
+Performing linear analysis
+16:07:44 INFO: Nodal displacements (meters):
+16:07:44 INFO: l_shoulder: DX=-0.026628  DY=0.137787  DZ=-0.079846
+16:07:44 INFO: neck_base: DX=-0.020367  DY=0.090434  DZ=-0.081934
+16:07:44 INFO: head_base: DX=0.013763  DY=0.096069  DZ=-0.126427
+16:07:44 INFO: head_top: DX=0.092585  DY=0.119654  DZ=-0.245345
+16:07:44 INFO: 
+Reaction forces (Newtons):
+16:07:44 INFO: l_elbow: RxnFX=1.462745  RxnFY=0.636502  RxnFZ=6.548109
+16:07:44 INFO: r_shoulder: RxnFX=-1.462745  RxnFY=-0.636502  RxnFZ=3.451891
+16:07:44 INFO: Weight exerted on support nodes (kg):
+16:07:44 INFO: l_elbow: -0.667493
+16:07:44 INFO: r_shoulder: -0.351875
+16:07:52 DEBUG: Starting new HTTPS connection (1): sentry.poliigon.com:443
+16:07:52 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
+16:22:02 DEBUG: Resetting dropped connection: sentry.poliigon.com
+16:22:03 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
