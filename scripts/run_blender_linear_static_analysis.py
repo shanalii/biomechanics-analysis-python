@@ -41,6 +41,7 @@ os.makedirs(output_dir, exist_ok=True)
 prune_old_logs(output_dir)
 log_path = timestamped_log_path(output_dir)
 logger = configure_logging(log_path)
+logger.info("Blender file: %s", bpy.data.filepath or "<unsaved blend file>")
 
 
 ### BUILD PYNITE 3D MODEL FROM BLENDER MESH ###
