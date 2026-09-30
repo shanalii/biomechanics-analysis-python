@@ -11,16 +11,14 @@ import bmesh  # type: ignore  # pylint: disable=wrong-import-position
 
 @dataclass(frozen=True)
 class MeshData:
-    """Plain-Python snapshot of a Blender mesh's verts/edges.
-
-    node_coords[i] and edge_indices are aligned by index with
-    biomechanics.body_data.BODY_NODES / BODY_MEMBERS respectively - this
-    ordering is assumed, not validated. See TODO2 in body_data.py for
-    planned follow-up work to validate/derive this mapping instead of
-    relying on Blender's vertex/edge creation order.
+    """Plain-Python snapshot of a Blender mesh's verts/edges, indexed by
+    Blender's own vertex index (arbitrary, not anatomically meaningful on
+    its own). See biomechanics.body_graph.BodyGraphResolver for how vertex
+    indices get resolved to anatomical joint names, from mesh topology and
+    geometry alone - not from Blender's vertex/edge creation order.
     """
 
-    node_coords: list  # list[tuple[float, float, float]]
+    node_coords: list  # list[tuple[float, float, float]], indexed by vertex index
     edge_indices: list  # list[tuple[int, int]] - (i_vert_index, j_vert_index)
 
 

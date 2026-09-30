@@ -1,0 +1,49 @@
+15:29:40 INFO: 3D model constructed.
+15:29:40 INFO: 
+Nodes: 9
+15:29:40 INFO: l_shoulder: (0.00, 0.00, -0.03)
+15:29:40 INFO: l_elbow: (0.00, 0.03, 0.03)
+15:29:40 INFO: l_wrist: (0.02, 0.02, 0.03)
+15:29:40 INFO: l_finger: (0.03, 0.00, 0.03)
+15:29:40 INFO: r_shoulder: (0.02, -0.02, 0.03)
+15:29:40 INFO: r_elbow: (0.00, -0.03, 0.03)
+15:29:40 INFO: r_wrist: (-0.02, -0.02, 0.03)
+15:29:40 INFO: r_finger: (-0.03, 0.00, 0.03)
+15:29:40 INFO: neck_base: (-0.02, 0.02, 0.03)
+15:29:40 INFO: 
+Members: 16
+15:29:40 INFO: l_upperarm: l_wrist -> l_elbow
+15:29:40 INFO: l_forearm: l_shoulder -> l_elbow
+15:29:40 INFO: l_back: l_wrist -> l_shoulder
+15:29:40 INFO: r_upperarm: l_finger -> l_wrist
+15:29:40 INFO: r_forearm: l_finger -> l_shoulder
+15:29:40 INFO: r_hand: r_shoulder -> l_finger
+15:29:40 INFO: r_back: r_shoulder -> l_shoulder
+15:29:40 INFO: neck: r_elbow -> r_shoulder
+15:29:40 INFO: head: r_elbow -> l_shoulder
+15:29:40 INFO: spine: r_wrist -> r_elbow
+15:29:40 INFO: r_pelvis: r_wrist -> l_shoulder
+15:29:40 INFO: l_pelvis: r_finger -> r_wrist
+15:29:40 INFO: l_thigh: r_finger -> l_shoulder
+15:29:40 INFO: l_calf: neck_base -> r_finger
+15:29:40 INFO: l_foot: neck_base -> l_shoulder
+15:29:40 INFO: r_thigh: l_elbow -> neck_base
+15:29:40 INFO: 
+Member point loads:
+15:29:40 INFO: l_upperarm: FZ = -31.9260355047
+15:29:40 INFO: l_forearm: FZ = -18.3504485619
+15:29:40 INFO: r_upperarm: FZ = -31.9260355047
+15:29:40 INFO: r_forearm: FZ = -18.3504485619
+15:29:40 INFO: r_hand: FZ = -6.3664821535680005
+15:29:40 INFO: head: FZ = -80.9853979725
+15:29:40 INFO: spine: FZ = -459.4165870878
+15:29:40 INFO: l_thigh: FZ = -102.9872113308
+15:29:40 INFO: l_calf: FZ = -46.62511929963001
+15:29:40 INFO: l_foot: FZ = -14.0437106271
+15:29:40 INFO: r_thigh: FZ = -102.9872113308
+15:29:40 INFO: 
+Supports:
+15:29:40 INFO: l_wrist
+15:29:40 INFO: r_elbow
+15:30:20 DEBUG: Starting new HTTPS connection (1): sentry.poliigon.com:443
+15:30:21 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0

@@ -30,19 +30,29 @@ STEEL_MATERIAL = dict(E=200000, G=29000, nu=0.27, rho=7850)
 
 
 class ModelBuilder:
-    """Builds a Pynite FEModel3D representing a stick figure and its loads."""
+    """Builds a Pynite FEModel3D representing a stick figure and its loads.
+
+    Joint/limb identity comes from `names_by_index` (mesh vertex index ->
+    anatomical name), typically produced by
+    biomechanics.body_graph.BodyGraphResolver from mesh topology + geometry
+    alone - not from Blender's vertex/edge creation order.
+    """
 
     def __init__(
         self,
         mesh_data: MeshData,
+        names_by_index: dict,
         nodes: list[BodyNode],
         members: list[BodyMember],
         body_mass_kg: float,
         g: float,
     ):
         self._mesh_data = mesh_data
-        self._nodes = nodes
-        self._members = members
+        self._names_by_index = names_by_index
+        self._nodes_by_name = {node.name: node for node in nodes}
+        self._members_by_connection = {
+            frozenset((member.i_node, member.j_node)): member for member in members
+        }
         self._body_mass_kg = body_mass_kg
         self._g = g
 
@@ -63,15 +73,24 @@ class ModelBuilder:
 
     def _add_nodes(self, model: FEModel3D) -> None:
         # Add nodes to model with anatomical names
-        for coords, body_node in zip(self._mesh_data.node_coords, self._nodes):
+        for vertex_index, coords in enumerate(self._mesh_data.node_coords):
+            name = self._names_by_index.get(vertex_index)
+            if name is None:
+                raise ValueError(f"Mesh vertex {vertex_index} could not be classified")
+            body_node = self._nodes_by_name.get(name)
+            if body_node is None:
+                raise ValueError(
+                    f"Mesh has joint '{name}' with no matching BodyNode in body_data.py"
+                )
+
             x, y, z = coords
-            model.add_node(body_node.name, x, y, z)
+            model.add_node(name, x, y, z)
 
             # Add support for nodes that make contact
             # Pinned supports - only release rotationally in local Z axis
             if body_node.is_supported:
                 model.def_support(
-                    body_node.name,
+                    name,
                     support_DX=True,
                     support_DY=True,
                     support_DZ=True,
@@ -82,10 +101,21 @@ class ModelBuilder:
 
     def _add_members(self, model: FEModel3D) -> None:
         # Add members to model with anatomical names
-        for (i, j), body_member in zip(self._mesh_data.edge_indices, self._members):
-            i_node_name = self._nodes[i].name
-            j_node_name = self._nodes[j].name
-            model.add_member(body_member.name, i_node_name, j_node_name, "Steel", "S")
+        for i, j in self._mesh_data.edge_indices:
+            name_i = self._names_by_index.get(i)
+            name_j = self._names_by_index.get(j)
+            body_member = self._members_by_connection.get(frozenset((name_i, name_j)))
+            if body_member is None:
+                raise ValueError(
+                    f"Mesh has an edge between '{name_i}' and '{name_j}' with no "
+                    "matching BodyMember in body_data.py"
+                )
+
+            # Use BodyMember's own i_node/j_node direction (not the mesh edge's
+            # arbitrary vertex order) - cm_percent is measured from i_node.
+            model.add_member(
+                body_member.name, body_member.i_node, body_member.j_node, "Steel", "S"
+            )
 
             # Option to add releases:
             # https://github.com/JWock82/Pynite/blob/25897a43a4a25f41b3c5709817974169ffff0f4f/
