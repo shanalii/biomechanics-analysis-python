@@ -1,0 +1,104 @@
+19:58:27 INFO: Blender file: /Users/sl/Desktop/mechanics_proj/biomechanics-analysis-python/blender_files/2026.09.28_Stick Figure_Pose 5.blend
+19:58:27 INFO: 3D model constructed.
+19:58:27 INFO: 
+Nodes: 21
+19:58:27 INFO: l_shoulder: (0.054264, -0.197285, 0.517401)
+19:58:27 INFO: l_elbow: (0.041879, -0.210183, 0.307792)
+19:58:27 INFO: l_wrist: (0.022875, -0.196901, 0.060437)
+19:58:27 INFO: l_finger: (0.030278, -0.069668, -0.089551)
+19:58:27 INFO: r_shoulder: (0.366400, -0.102955, 0.360877)
+19:58:27 INFO: neck_base: (0.210332, -0.150120, 0.439139)
+19:58:27 INFO: r_elbow: (0.469395, -0.097925, 0.160522)
+19:58:27 INFO: r_wrist: (0.253103, 0.060772, 0.137045)
+19:58:27 INFO: r_finger: (0.115599, 0.192026, 0.087487)
+19:58:27 INFO: head_base: (0.192813, -0.061652, 0.455615)
+19:58:27 INFO: head_top: (0.178324, 0.170292, 0.570728)
+19:58:27 INFO: l_hip: (0.201628, -0.717310, 0.309666)
+19:58:27 INFO: r_hip: (0.412991, -0.688067, 0.283054)
+19:58:27 INFO: spine_base: (0.307310, -0.702689, 0.296360)
+19:58:27 INFO: l_knee: (0.227777, -0.821012, -0.015617)
+19:58:27 INFO: r_knee: (0.647528, -0.731632, 0.050794)
+19:58:27 INFO: l_heel: (0.397885, -1.018115, 0.180111)
+19:58:27 INFO: l_toe: (0.453165, -1.199647, 0.034494)
+19:58:27 INFO: r_heel: (0.581188, -1.065094, 0.082352)
+19:58:27 INFO: r_toe: (0.592996, -1.300363, 0.057072)
+19:58:27 INFO: tail: (0.321620, -0.738937, 0.324371)
+19:58:27 INFO: 
+Members: 20
+19:58:27 INFO: l_upperarm: l_shoulder -> l_elbow
+19:58:27 INFO: l_forearm: l_elbow -> l_wrist
+19:58:27 INFO: l_hand: l_wrist -> l_finger
+19:58:27 INFO: l_back: neck_base -> l_shoulder
+19:58:27 INFO: r_back: r_shoulder -> neck_base
+19:58:27 INFO: r_upperarm: r_elbow -> r_shoulder
+19:58:27 INFO: r_forearm: r_wrist -> r_elbow
+19:58:27 INFO: r_hand: r_finger -> r_wrist
+19:58:27 INFO: neck: neck_base -> head_base
+19:58:27 INFO: head: head_base -> head_top
+19:58:27 INFO: r_pelvis: spine_base -> r_hip
+19:58:27 INFO: l_pelvis: l_hip -> spine_base
+19:58:27 INFO: spine: neck_base -> spine_base
+19:58:27 INFO: l_thigh: l_knee -> l_hip
+19:58:27 INFO: r_thigh: r_hip -> r_knee
+19:58:27 INFO: l_calf: l_heel -> l_knee
+19:58:27 INFO: l_foot: l_toe -> l_heel
+19:58:27 INFO: r_calf: r_knee -> r_heel
+19:58:27 INFO: r_foot: r_heel -> r_toe
+19:58:27 INFO: tailbone: spine_base -> tail
+19:58:27 INFO: 
+Member point loads:
+19:58:27 INFO: l_upperarm: FZ = -35.980642013796896
+19:58:27 INFO: l_forearm: FZ = -20.6809555292613
+19:58:27 INFO: l_hand: FZ = -7.175025387071137
+19:58:27 INFO: r_upperarm: FZ = -35.980642013796896
+19:58:27 INFO: r_forearm: FZ = -20.6809555292613
+19:58:27 INFO: r_hand: FZ = -7.175025387071137
+19:58:27 INFO: head: FZ = -91.2705435150075
+19:58:27 INFO: spine: FZ = -366.77041535931295
+19:58:27 INFO: l_thigh: FZ = -116.0665871698116
+19:58:27 INFO: r_thigh: FZ = -116.0665871698116
+19:58:27 INFO: l_calf: FZ = -52.54650945068302
+19:58:27 INFO: l_foot: FZ = -15.8272618767417
+19:58:27 INFO: r_calf: FZ = -52.54650945068302
+19:58:27 INFO: r_foot: FZ = -15.8272618767417
+19:58:27 INFO: tailbone: FZ = -150.99207839919632
+19:58:27 INFO: 
+Supports:
+19:58:27 INFO: l_wrist
+19:58:27 INFO: r_elbow
+19:58:27 INFO: l_knee
+19:58:27 INFO: r_knee
+19:58:27 INFO: 
+Performing linear analysis
+19:58:27 INFO: Nodal displacements (meters):
+19:58:27 INFO: l_shoulder: DX=-8.091263  DY=8.246347  DZ=0.140461
+19:58:27 INFO: l_elbow: DX=-8.029909  DY=2.769874  DZ=0.595932
+19:58:27 INFO: l_finger: DX=5.758898  DY=-0.051952  DZ=0.238209
+19:58:27 INFO: r_shoulder: DX=-9.593203  DY=4.680253  DZ=-4.915939
+19:58:27 INFO: neck_base: DX=-10.951533  DY=7.806933  DZ=-5.879745
+19:58:27 INFO: r_wrist: DX=1.630536  DY=-0.137803  DZ=-15.968909
+19:58:27 INFO: r_finger: DX=5.267058  DY=-0.599620  DZ=-27.283748
+19:58:27 INFO: head_base: DX=-10.301915  DY=8.086943  DZ=-6.717441
+19:58:27 INFO: head_top: DX=-7.246335  DY=12.979019  DZ=-16.228716
+19:58:27 INFO: l_hip: DX=-8.172379  DY=10.053872  DZ=-4.276444
+19:58:27 INFO: r_hip: DX=-8.695619  DY=8.070965  DZ=-10.416410
+19:58:27 INFO: spine_base: DX=-8.517988  DY=8.970501  DZ=-8.142147
+19:58:27 INFO: l_heel: DX=-3.985953  DY=-3.497763  DZ=-0.095558
+19:58:27 INFO: l_toe: DX=-1.556470  DY=0.908896  DZ=-4.672410
+19:58:27 INFO: r_heel: DX=-2.284146  DY=-0.935452  DZ=-14.725760
+19:58:27 INFO: r_toe: DX=-0.501086  DY=0.247687  DZ=-24.909351
+19:58:27 INFO: tail: DX=-7.823579  DY=10.918989  DZ=-5.976477
+19:58:27 INFO: 
+Reaction forces (Newtons):
+19:58:27 INFO: l_wrist: RxnFX=45.351617  RxnFY=-14.238474  RxnFZ=241.433839
+19:58:27 INFO: r_elbow: RxnFX=-51.043774  RxnFY=-81.612363  RxnFZ=171.881480
+19:58:27 INFO: l_knee: RxnFX=52.064824  RxnFY=105.257764  RxnFZ=495.880541
+19:58:27 INFO: r_knee: RxnFX=-46.372667  RxnFY=-9.406927  RxnFZ=196.391141
+19:58:27 INFO: Weight exerted on support nodes (kg):
+19:58:27 INFO: l_wrist: -24.610993
+19:58:27 INFO: r_elbow: -17.521048
+19:58:27 INFO: l_knee: -50.548475
+19:58:27 INFO: r_knee: -20.019484
+19:58:30 DEBUG: Starting new HTTPS connection (1): sentry.poliigon.com:443
+19:58:31 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
+19:58:31 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
