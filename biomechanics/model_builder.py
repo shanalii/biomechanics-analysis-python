@@ -3,6 +3,7 @@
 from Pynite import FEModel3D  # pylint: disable=wrong-import-position
 
 from biomechanics.body_data import BodyMember, BodyNode
+from biomechanics.body_graph import BodyGraph
 from biomechanics.mesh_reader import MeshData
 
 # Section properties pulled directly from SkyCiv's "Default Section" (Section ID 1),
@@ -28,27 +29,27 @@ STEEL_MATERIAL = dict(E=200000, G=200000 / (2 * (1 + 0.27)), nu=0.27, rho=7850)
 class ModelBuilder:
     """Builds a Pynite FEModel3D representing a stick figure and its loads.
 
-    Joint/limb identity comes from `names_by_index` (mesh vertex index ->
-    anatomical name), typically produced by
-    biomechanics.body_graph.BodyGraphResolver from mesh topology + geometry
-    alone - not from Blender's vertex/edge creation order.
+    Joint/limb identity and direction (i_node/j_node) both come from
+    `body_graph` (a biomechanics.body_graph.BodyGraph), produced by
+    BodyGraphResolver from mesh topology + geometry alone - not from
+    Blender's vertex/edge creation order, and not stored in body_data.py.
     """
 
     def __init__(
         self,
         mesh_data: MeshData,
-        names_by_index: dict,
+        body_graph: BodyGraph,
         nodes: list[BodyNode],
         members: list[BodyMember],
         body_mass_kg: float,
         g: float,
     ):
         self._mesh_data = mesh_data
-        self._names_by_index = names_by_index
+        self._names_by_index = body_graph.names_by_index
+        self._member_names_by_edge = body_graph.member_names_by_edge
+        self._direction_by_edge = body_graph.direction_by_edge
         self._nodes_by_name = {node.name: node for node in nodes}
-        self._members_by_connection = {
-            frozenset((member.i_node, member.j_node)): member for member in members
-        }
+        self._members_by_name = {member.name: member for member in members}
         self._body_mass_kg = body_mass_kg
         self._g = g
 
@@ -101,32 +102,29 @@ class ModelBuilder:
     def _add_members(self, model: FEModel3D) -> None:
         # Add members to model with anatomical names
         for i, j in self._mesh_data.edge_indices:
-            name_i = self._names_by_index.get(i)
-            name_j = self._names_by_index.get(j)
-            body_member = self._members_by_connection.get(frozenset((name_i, name_j)))
+            edge = frozenset((i, j))
+            member_name = self._member_names_by_edge.get(edge)
+            if member_name is None:
+                raise ValueError(f"Mesh edge {edge} could not be classified as a member")
+            body_member = self._members_by_name.get(member_name)
             if body_member is None:
                 raise ValueError(
-                    f"Mesh has an edge between '{name_i}' and '{name_j}' with no "
-                    "matching BodyMember in body_data.py"
+                    f"Mesh has member '{member_name}' with no matching BodyMember "
+                    "in body_data.py"
                 )
 
-            # Use BodyMember's own i_node/j_node direction (not the mesh edge's
-            # arbitrary vertex order) - cm_percent is measured from i_node.
-            model.add_member(
-                body_member.name, body_member.i_node, body_member.j_node, "Steel", "S"
-            )
+            i_index, j_index = self._direction_by_edge[edge]
+            i_node_name = self._names_by_index[i_index]
+            j_node_name = self._names_by_index[j_index]
 
-            # Option to add releases:
-            # https://github.com/JWock82/Pynite/blob/25897a43a4a25f41b3c5709817974169ffff0f4f/
-            # Pynite/Member3D.py#L103
-            # Equivalent to SkyCiv node fixicity (currently set to all fixed, which is
-            # Pynite default)
+            model.add_member(body_member.name, i_node_name, j_node_name, "Steel", "S")
 
             # Add point load at CM based on CM percent; calculate length along the member
             # https://pynite.readthedocs.io/en/latest/member.html#local-coordinate-system
             # Each member starts at its i-node and ends at its j-node.
             # The local x-axis for the member is defined by a vector going from the
-            # i-node to the j-node.
+            # i-node to the j-node. i_node is proximal (limbs) or physically higher
+            # (centerline) - see biomechanics.body_graph.
 
             # UNIT NOTE: we will calculate the weight (Newtons) by multiplying input mass by g
             # (9.81m/s^2). This is for the calculations to scientifically make sense, though we

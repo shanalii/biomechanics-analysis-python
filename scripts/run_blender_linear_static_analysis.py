@@ -48,9 +48,9 @@ logger.info("Blender file: %s", bpy.data.filepath or "<unsaved blend file>")
 ### BUILD PYNITE 3D MODEL FROM BLENDER MESH ###
 
 mesh_data = MeshReader(bpy.context.object).read()
-names_by_index = BodyGraphResolver().resolve(mesh_data)
+body_graph = BodyGraphResolver().resolve(mesh_data)
 
-builder = ModelBuilder(mesh_data, names_by_index, BODY_NODES, BODY_MEMBERS, BODY_MASS_KG, G)
+builder = ModelBuilder(mesh_data, body_graph, BODY_NODES, BODY_MEMBERS, BODY_MASS_KG, G)
 model = builder.build()
 logger.info("3D model constructed.")
 log_model_summary(model, logger)
