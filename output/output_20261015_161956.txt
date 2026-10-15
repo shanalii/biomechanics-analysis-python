@@ -1,0 +1,5 @@
+16:19:56 INFO: Blender file: /Users/sl/Desktop/mechanics_proj/biomechanics-analysis-python/blender_files/with_pelvis-demo-2-2026.09.04_SkyCiv model potentially.blend
+16:19:57 DEBUG: Starting new HTTPS connection (1): sentry.poliigon.com:443
+16:19:58 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
+16:42:08 DEBUG: Resetting dropped connection: sentry.poliigon.com
+16:42:09 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0

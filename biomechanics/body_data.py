@@ -74,27 +74,30 @@ BODY_NODES = [
 ]
 
 # Body segments, alphabetically by name (identity/connectivity not stored -
-# see BodyGraphResolver). cm_percent values below are placeholders pending a
-# pass to express them all as "percent from i_node" under the new
-# direction convention - do not trust these numbers yet.
+# see BodyGraphResolver).
+# Proximal -> distal for cm_percent:
+# Top -> bottom for centerline members, near trunk -> further from trunk for others
+# Should be consistent with given data without modifications - flag if not
+# TODO: same numbers for R&L
 BODY_MEMBERS = [
-    BodyMember("head", mass_percent=6.94, cm_percent=59.76),
+    BodyMember("head", mass_percent=8.25539225, cm_percent=40.24),
     BodyMember("l_back", mass_percent=0, cm_percent=0),
-    BodyMember("l_calf", mass_percent=4.33, cm_percent=44.59),
-    BodyMember("l_foot", mass_percent=1.37, cm_percent=44.15),
-    BodyMember("l_forearm", mass_percent=1.62, cm_percent=45.74),
-    BodyMember("l_hand", mass_percent=0.61, cm_percent=79.00),
+    BodyMember("l_calf", mass_percent=4.752815423, cm_percent=43.4),
+    BodyMember("l_foot", mass_percent=1.43157091, cm_percent=50),
+    BodyMember("l_forearm", mass_percent=1.87058599, cm_percent=43),
+    BodyMember("l_hand", mass_percent=0.6489788128, cm_percent=46.8),
     BodyMember("l_pelvis", mass_percent=0, cm_percent=0),
-    BodyMember("l_thigh", mass_percent=14.16, cm_percent=40.95),
-    BodyMember("l_upperarm", mass_percent=2.71, cm_percent=57.72),
+    BodyMember("l_thigh", mass_percent=10.49818668, cm_percent=43.3),
+    BodyMember("l_upperarm", mass_percent=3.25443787, cm_percent=43.6),
     BodyMember("neck", mass_percent=0, cm_percent=0),
     BodyMember("r_back", mass_percent=0, cm_percent=0),
-    BodyMember("r_calf", mass_percent=4.33, cm_percent=55.41),
-    BodyMember("r_foot", mass_percent=1.37, cm_percent=55.85),
-    BodyMember("r_forearm", mass_percent=1.62, cm_percent=54.26),
-    BodyMember("r_hand", mass_percent=0.61, cm_percent=79.00),
+    BodyMember("r_calf", mass_percent=4.752815423, cm_percent=43.4),
+    BodyMember("r_foot", mass_percent=1.43157091, cm_percent=50),
+    BodyMember("r_forearm", mass_percent=1.87058599, cm_percent=43),
+    BodyMember("r_hand", mass_percent=0.6489788128, cm_percent=46.8),
     BodyMember("r_pelvis", mass_percent=0, cm_percent=0),
-    BodyMember("r_thigh", mass_percent=14.16, cm_percent=59.05),
-    BodyMember("r_upperarm", mass_percent=2.71, cm_percent=42.28),
-    BodyMember("spine", mass_percent=43.46, cm_percent=55.14),
+    BodyMember("r_thigh", mass_percent=10.49818668, cm_percent=43.3),
+    BodyMember("r_upperarm", mass_percent=3.25443787, cm_percent=43.6),
+    BodyMember("spine", mass_percent=33.1742699, cm_percent=54.04),
+    BodyMember("tailbone", mass_percent=13.65718649, cm_percent=5),
 ]
