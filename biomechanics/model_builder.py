@@ -3,46 +3,53 @@
 from Pynite import FEModel3D  # pylint: disable=wrong-import-position
 
 from biomechanics.body_data import BodyMember, BodyNode
+from biomechanics.body_graph import BodyGraph
 from biomechanics.mesh_reader import MeshData
 
-# Section based on steel material characteristics
-# A: cross-sectional area (pi*r^2)
-#   (SkyCiv: 1681 mm^2 = 0.001681 m^2)
-# Iy: second moment of area (m. o. inertia) about the weak axis (pi*r^4/4)
-#   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
-# Iz: second moment of area (m. o. inertia) about the strong axis (pi*r^4/4)
-#   (SkyCiv: 235345 mm^4 = 2e-7 m^4)
-# J: torsion constant (pi*r^4/2); calculated assuming circular cross-section
-#   First calculate radius of circle with given A (r = 0.02313 m)
-#   (https://www.omnicalculator.com/physics/torsional-constant: 4.496e-7 m^4)
-# (Source: https://skyciv.com/free-moment-of-inertia-calculator/,
-# http://www.hyperphysics.phy-astr.gsu.edu/hbase/icyl.html)
-STEEL_SECTION = dict(A=0.001681, Iy=2.353e-7, Iz=2.353e-7, J=4.496e-7)
+# Section properties pulled directly from SkyCiv's "Default Section" (Section ID 1),
+# which is what the SkyCiv model actually solves with (all members use this section).
+# Source values in mm^2 / mm^4, converted to m^2 / m^4.
+STEEL_SECTION = dict(
+    A=0.0016805189677511114,
+    Iy=2.3534533341427174e-7,
+    Iz=2.3534533341427174e-7,
+    J=3.9714525013658364e-7,
+)
 
 # Material ref: https://github.com/JWock82/Pynite/blob/main/Pynite/Material.py
 # Approximate values for steel beams:
 # E = 200000 MPa (SkyCiv) (1Pa = 1N/m^2)
-# G = 79300 MPa (https://www.engineeringtoolbox.com/modulus-rigidity-d_946.html)
-#  Optional in SkyCiv but required in PyNite
+# G derived the way structural software typically does: G = E / (2*(1+nu)),
+# rather than an independently-specified value.
 # nu = 0.27 (SkyCiv)
 # rho = 7850 kg/m^3 (SkyCiv)
-STEEL_MATERIAL = dict(E=200000, G=29000, nu=0.27, rho=7850)
+STEEL_MATERIAL = dict(E=200000, G=200000 / (2 * (1 + 0.27)), nu=0.27, rho=7850)
 
 
 class ModelBuilder:
-    """Builds a Pynite FEModel3D representing a stick figure and its loads."""
+    """Builds a Pynite FEModel3D representing a stick figure and its loads.
+
+    Joint/limb identity and direction (i_node/j_node) both come from
+    `body_graph` (a biomechanics.body_graph.BodyGraph), produced by
+    BodyGraphResolver from mesh topology + geometry alone - not from
+    Blender's vertex/edge creation order, and not stored in body_data.py.
+    """
 
     def __init__(
         self,
         mesh_data: MeshData,
+        body_graph: BodyGraph,
         nodes: list[BodyNode],
         members: list[BodyMember],
         body_mass_kg: float,
         g: float,
     ):
         self._mesh_data = mesh_data
-        self._nodes = nodes
-        self._members = members
+        self._names_by_index = body_graph.names_by_index
+        self._member_names_by_edge = body_graph.member_names_by_edge
+        self._direction_by_edge = body_graph.direction_by_edge
+        self._nodes_by_name = {node.name: node for node in nodes}
+        self._members_by_name = {member.name: member for member in members}
         self._body_mass_kg = body_mass_kg
         self._g = g
 
@@ -63,41 +70,61 @@ class ModelBuilder:
 
     def _add_nodes(self, model: FEModel3D) -> None:
         # Add nodes to model with anatomical names
-        for coords, body_node in zip(self._mesh_data.node_coords, self._nodes):
+        for vertex_index, coords in enumerate(self._mesh_data.node_coords):
+            name = self._names_by_index.get(vertex_index)
+            if name is None:
+                raise ValueError(f"Mesh vertex {vertex_index} could not be classified")
+            body_node = self._nodes_by_name.get(name)
+            if body_node is None:
+                raise ValueError(
+                    f"Mesh has joint '{name}' with no matching BodyNode in body_data.py"
+                )
+
             x, y, z = coords
-            model.add_node(body_node.name, x, y, z)
+            model.add_node(name, x, y, z)
 
             # Add support for nodes that make contact
-            # Pinned supports - only release rotationally in local Z axis
+            # Pinned supports - only release rotation about the model's Y axis.
+            # SkyCiv's restraint code (FFFFFR) releases rotation about SkyCiv's Z axis,
+            # which corresponds to this model's Y axis (SkyCiv is Y-up, this model is
+            # Z-up: SkyCiv Y <-> our Z, SkyCiv Z <-> our Y).
             if body_node.is_supported:
                 model.def_support(
-                    body_node.name,
+                    name,
                     support_DX=True,
                     support_DY=True,
                     support_DZ=True,
                     support_RX=True,
-                    support_RY=True,
-                    support_RZ=False,
+                    support_RY=False,
+                    support_RZ=True,
                 )
 
     def _add_members(self, model: FEModel3D) -> None:
         # Add members to model with anatomical names
-        for (i, j), body_member in zip(self._mesh_data.edge_indices, self._members):
-            i_node_name = self._nodes[i].name
-            j_node_name = self._nodes[j].name
-            model.add_member(body_member.name, i_node_name, j_node_name, "Steel", "S")
+        for i, j in self._mesh_data.edge_indices:
+            edge = frozenset((i, j))
+            member_name = self._member_names_by_edge.get(edge)
+            if member_name is None:
+                raise ValueError(f"Mesh edge {edge} could not be classified as a member")
+            body_member = self._members_by_name.get(member_name)
+            if body_member is None:
+                raise ValueError(
+                    f"Mesh has member '{member_name}' with no matching BodyMember "
+                    "in body_data.py"
+                )
 
-            # Option to add releases:
-            # https://github.com/JWock82/Pynite/blob/25897a43a4a25f41b3c5709817974169ffff0f4f/
-            # Pynite/Member3D.py#L103
-            # Equivalent to SkyCiv node fixicity (currently set to all fixed, which is
-            # Pynite default)
+            i_index, j_index = self._direction_by_edge[edge]
+            i_node_name = self._names_by_index[i_index]
+            j_node_name = self._names_by_index[j_index]
+
+            model.add_member(body_member.name, i_node_name, j_node_name, "Steel", "S")
 
             # Add point load at CM based on CM percent; calculate length along the member
             # https://pynite.readthedocs.io/en/latest/member.html#local-coordinate-system
             # Each member starts at its i-node and ends at its j-node.
             # The local x-axis for the member is defined by a vector going from the
-            # i-node to the j-node.
+            # i-node to the j-node. i_node is proximal (limbs) or physically higher
+            # (centerline) - see biomechanics.body_graph.
 
             # UNIT NOTE: we will calculate the weight (Newtons) by multiplying input mass by g
             # (9.81m/s^2). This is for the calculations to scientifically make sense, though we

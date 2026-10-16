@@ -8,6 +8,8 @@ blenderenv.venv/
 .venv/
 
 # Blender
+blender_files/
+*.blend
 *.blend1
 *.blend2
 

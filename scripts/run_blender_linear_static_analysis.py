@@ -18,6 +18,7 @@ from biomechanics.body_data import (  # pylint: disable=wrong-import-position
     BODY_NODES,
     G,
 )
+from biomechanics.body_graph import BodyGraphResolver  # pylint: disable=wrong-import-position
 from biomechanics.logging_setup import (  # pylint: disable=wrong-import-position
     configure_logging,
     prune_old_logs,
@@ -41,13 +42,15 @@ os.makedirs(output_dir, exist_ok=True)
 prune_old_logs(output_dir)
 log_path = timestamped_log_path(output_dir)
 logger = configure_logging(log_path)
+logger.info("Blender file: %s", bpy.data.filepath or "<unsaved blend file>")
 
 
 ### BUILD PYNITE 3D MODEL FROM BLENDER MESH ###
 
 mesh_data = MeshReader(bpy.context.object).read()
+body_graph = BodyGraphResolver().resolve(mesh_data)
 
-builder = ModelBuilder(mesh_data, BODY_NODES, BODY_MEMBERS, BODY_MASS_KG, G)
+builder = ModelBuilder(mesh_data, body_graph, BODY_NODES, BODY_MEMBERS, BODY_MASS_KG, G)
 model = builder.build()
 logger.info("3D model constructed.")
 log_model_summary(model, logger)
@@ -58,7 +61,7 @@ log_model_summary(model, logger)
 com_points = [
     ModelBuilder.member_com_point(model.members[member.name], member.cm_percent)
     for member in BODY_MEMBERS
-    if member.mass_percent > 0
+    if member.mass_percent > 0 and member.name in model.members
 ]
 ComVisualizer().draw_com_markers(com_points)
 
