@@ -1,0 +1,70 @@
+15:40:30 INFO: Blender file: /Users/sl/Desktop/mechanics_proj/biomechanics-analysis-python/blender_files/demo_2_2026.09.04_SkyCiv model potentially.blend
+15:40:30 INFO: 3D model constructed.
+15:40:30 INFO: 
+Nodes: 20
+15:40:30 INFO: l_shoulder: (0.027486, -0.188033, 0.456008)
+15:40:30 INFO: l_elbow: (0.016693, -0.293222, 0.267478)
+15:40:30 INFO: l_wrist: (0.016863, -0.195419, 0.032880)
+15:40:30 INFO: l_finger: (-0.000000, -0.000000, 0.012707)
+15:40:30 INFO: r_shoulder: (0.382879, -0.133880, 0.423061)
+15:40:30 INFO: neck_base: (0.205182, -0.160956, 0.439534)
+15:40:30 INFO: r_elbow: (0.481992, -0.122347, 0.223057)
+15:40:30 INFO: r_wrist: (0.250179, 0.005777, 0.184953)
+15:40:30 INFO: r_finger: (0.125743, 0.125700, 0.091835)
+15:40:30 INFO: head_base: (0.193321, -0.070193, 0.441931)
+15:40:30 INFO: head_top: (0.173432, 0.189575, 0.480267)
+15:40:30 INFO: l_hip: (0.199381, -0.729239, 0.327861)
+15:40:30 INFO: r_hip: (0.410677, -0.697923, 0.308107)
+15:40:30 INFO: spine_base: (0.305029, -0.713581, 0.317984)
+15:40:30 INFO: l_knee: (0.226989, -0.822173, -0.000000)
+15:40:30 INFO: r_knee: (0.644792, -0.731366, 0.073894)
+15:40:30 INFO: l_heel: (0.396856, -1.023944, 0.190945)
+15:40:30 INFO: l_toe: (0.452786, -1.199374, 0.038421)
+15:40:30 INFO: r_heel: (0.580283, -1.066292, 0.091530)
+15:40:30 INFO: r_toe: (0.592996, -1.300362, 0.057071)
+15:40:30 INFO: 
+Members: 19
+15:40:30 INFO: l_upperarm: l_shoulder -> l_elbow
+15:40:30 INFO: l_forearm: l_elbow -> l_wrist
+15:40:30 INFO: l_hand: l_wrist -> l_finger
+15:40:30 INFO: l_back: neck_base -> l_shoulder
+15:40:30 INFO: r_back: neck_base -> r_shoulder
+15:40:30 INFO: r_upperarm: r_shoulder -> r_elbow
+15:40:30 INFO: r_forearm: r_elbow -> r_wrist
+15:40:30 INFO: r_hand: r_wrist -> r_finger
+15:40:30 INFO: neck: head_base -> neck_base
+15:40:30 INFO: head: head_top -> head_base
+15:40:30 INFO: r_pelvis: spine_base -> r_hip
+15:40:30 INFO: l_pelvis: spine_base -> l_hip
+15:40:30 INFO: spine: neck_base -> spine_base
+15:40:30 INFO: l_thigh: l_hip -> l_knee
+15:40:30 INFO: r_thigh: r_hip -> r_knee
+15:40:30 INFO: l_calf: l_knee -> l_heel
+15:40:30 INFO: l_foot: l_heel -> l_toe
+15:40:30 INFO: r_calf: r_knee -> r_heel
+15:40:30 INFO: r_foot: r_heel -> r_toe
+15:40:30 INFO: 
+Member point loads:
+15:40:30 INFO: l_upperarm: FZ = -35.980642013796896
+15:40:30 INFO: l_forearm: FZ = -20.6809555292613
+15:40:30 INFO: l_hand: FZ = -7.175025387071137
+15:40:30 INFO: r_upperarm: FZ = -35.980642013796896
+15:40:30 INFO: r_forearm: FZ = -20.6809555292613
+15:40:30 INFO: r_hand: FZ = -7.175025387071137
+15:40:30 INFO: head: FZ = -91.2705435150075
+15:40:30 INFO: spine: FZ = -366.77041535931295
+15:40:30 INFO: l_thigh: FZ = -116.0665871698116
+15:40:30 INFO: r_thigh: FZ = -116.0665871698116
+15:40:30 INFO: l_calf: FZ = -52.54650945068302
+15:40:30 INFO: l_foot: FZ = -15.8272618767417
+15:40:30 INFO: r_calf: FZ = -52.54650945068302
+15:40:30 INFO: r_foot: FZ = -15.8272618767417
+15:40:30 INFO: 
+Supports:
+15:40:30 INFO: l_wrist
+15:40:30 INFO: r_elbow
+15:40:30 INFO: l_knee
+15:40:30 INFO: r_knee
+15:40:45 DEBUG: Starting new HTTPS connection (1): sentry.poliigon.com:443
+15:40:46 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
+15:44:39 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0

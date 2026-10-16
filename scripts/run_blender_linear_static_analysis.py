@@ -61,7 +61,7 @@ log_model_summary(model, logger)
 com_points = [
     ModelBuilder.member_com_point(model.members[member.name], member.cm_percent)
     for member in BODY_MEMBERS
-    if member.mass_percent > 0
+    if member.mass_percent > 0 and member.name in model.members
 ]
 ComVisualizer().draw_com_markers(com_points)
 

@@ -101,3 +101,5 @@ Reaction forces (Newtons):
 16:51:05 INFO: r_knee: -18.981160
 16:52:01 DEBUG: Starting new HTTPS connection (1): sentry.poliigon.com:443
 16:52:01 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0
+15:39:41 DEBUG: Resetting dropped connection: sentry.poliigon.com
+15:39:42 DEBUG: https://sentry.poliigon.com:443 "POST /api/7/envelope/ HTTP/1.1" 200 0

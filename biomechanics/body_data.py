@@ -1,20 +1,6 @@
 """Anatomical configuration for the stick-figure biomechanics model.
 
-Model for: 2026.07.16_Basic Stick Figure Posed.blend
-
-This is the single source of truth for THIS analysis: which joints are
-supported, and the mass-distribution data used to compute point loads.
-Everything about *identity* - which joints exist, which members connect
-them, and member direction (i_node/j_node) - is resolved against the
-Blender mesh via biomechanics.body_graph.BodyGraphResolver, which infers
-all of it purely from mesh topology and geometry, independent of this file
-and of Blender's vertex/edge creation order. This file only needs to
-provide physics data (mass, support, cm_percent) keyed by the names that
-module produces.
-
-cm_percent is always "percent of the way from i_node" under that
-convention - see body_graph.py for exactly what i_node means for each kind
-of member.
+TODO: instead of populating per-model parameters here, import from a txt or csv file.
 """
 
 from dataclasses import dataclass
@@ -98,6 +84,7 @@ BODY_MEMBERS = [
     BodyMember("r_pelvis", mass_percent=0, cm_percent=0),
     BodyMember("r_thigh", mass_percent=10.49818668, cm_percent=43.3),
     BodyMember("r_upperarm", mass_percent=3.25443787, cm_percent=43.6),
+    # Should CM for the spine be closer to neck or pelvis?
     BodyMember("spine", mass_percent=33.1742699, cm_percent=54.04),
     BodyMember("tailbone", mass_percent=13.65718649, cm_percent=5),
 ]

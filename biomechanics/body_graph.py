@@ -1,11 +1,6 @@
 """Infers anatomical joint names, member (segment) names, and canonical
 member direction for a bipedal stick-figure mesh from pure topology and
-geometry - independent of any specific analysis's body config (see
-body_data.py, which is a separate, per-analysis concern: mass distribution,
-supports, etc., keyed by the names this module produces). body_data.py does
-not need to say which joints a member connects - that's inferred here too,
-the same way joint names are: by position in a chain (e.g. the segment
-between the shoulder and elbow joints is always "upperarm").
+geometry, independent of any specific analysis's body config.
 
 Expected body plan (generic to this bipedal stick-figure convention, not
 specific to any one .blend file):
@@ -16,11 +11,10 @@ specific to any one .blend file):
     one's other branches form 1 head chain + 2 arm chains.
   - A head chain, 2 hops from neck_base: head_base, head_top (leaf).
   - Two arm chains, 4 hops from neck_base: shoulder, elbow, wrist, finger (leaf).
-  - Two leg chains, 4 hops from spine_base (5 from neck_base): hip, knee,
+  - Two leg chains, 4 hops from spine_base/5 from neck_base: hip, knee,
     heel, toe (leaf).
-  - An optional tail chain off spine_base (any length, present on some
-    meshes) - named "tail" (or "tail_1", "tail_2", ... if longer than one
-    joint).
+  - An optional tail off spine_base, present on some meshes - always
+    exactly one joint, named "tail".
   - Left/right is resolved from mesh geometry (not a fixed world axis) - see
     BodyGraphResolver.resolve() for details.
 
@@ -28,10 +22,10 @@ Member direction convention (used for Pynite's i_node/j_node, and for what
 cm_percent in body_data.py is measured from):
   - Limb members (arms, legs): i_node = proximal (nearer the trunk),
     j_node = distal (farther away) - cm_percent is "percent of the way from
-    the proximal end", per standard anatomical usage.
+    the proximal end".
   - Centerline members (spine, neck, head, tail): i_node = the physically
     higher joint, j_node = the lower one - cm_percent is "percent of the
-    way down from the top".
+    way down from the top". - TODO confirm this!
 This is derived automatically here, not stored in body_data.py.
 """
 
@@ -236,8 +230,8 @@ class BodyGraphResolver:
     @staticmethod
     def _classify_spine_branches(graph, spine_base, center):
         """Returns (leg_chains, tail_chain). leg_chains is always the 2
-        length-4 chains off spine_base. tail_chain is any other chain found
-        (any length) if present, else None.
+        length-4 chains off spine_base. tail_chain is a single joint (a
+        length-1 chain) if present, else None.
         """
         leg_chains = []
         other_chains = []
@@ -258,15 +252,16 @@ class BodyGraphResolver:
                 f"found {len(other_chains)}"
             )
         tail_chain = other_chains[0] if other_chains else None
+        if tail_chain is not None and len(tail_chain) != 1:
+            raise ValueError(
+                f"Expected tail to be a single joint, found a chain of "
+                f"length {len(tail_chain)}: {tail_chain}"
+            )
         return leg_chains, tail_chain
 
     @staticmethod
     def _assign_tail(names, tail_chain):
-        if len(tail_chain) == 1:
-            names[tail_chain[0]] = "tail"
-        else:
-            for idx, node in enumerate(tail_chain, start=1):
-                names[node] = f"tail_{idx}"
+        names[tail_chain[0]] = "tail"
 
     @staticmethod
     def _side_prefix(coords, branch_point, chain, up, lateral_ref, ref_is_right):
@@ -293,12 +288,7 @@ class BodyGraphResolver:
             member_names[frozenset((u, v))] = base_name
 
         if tail_chain is not None:
-            full_tail = [spine_base] + tail_chain
-            if len(tail_chain) == 1:
-                member_names[frozenset((full_tail[0], full_tail[1]))] = TAIL_MEMBER_NAME
-            else:
-                for idx, (u, v) in enumerate(zip(full_tail[:-1], full_tail[1:]), start=1):
-                    member_names[frozenset((u, v))] = f"{TAIL_MEMBER_NAME}_{idx}"
+            member_names[frozenset((spine_base, tail_chain[0]))] = TAIL_MEMBER_NAME
 
     @staticmethod
     def _add_limb_direction(direction, branch_point, chain):
@@ -316,7 +306,6 @@ class BodyGraphResolver:
         edges += list(zip(head_chain[:-1], head_chain[1:]))
         if tail_chain is not None:
             edges.append((spine_base, tail_chain[0]))
-            edges += list(zip(tail_chain[:-1], tail_chain[1:]))
         return edges
 
     @staticmethod
